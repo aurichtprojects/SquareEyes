@@ -1,0 +1,55 @@
+Preparation of the dummy datasets:
+
+--------------------------------------------------------
+Cells:
+1) make grid cells
+Based on the function from this post:
+http://gis.stackexchange.com/questions/16374/how-to-create-a-regular-polygon-grid-in-postgis
+
+We run:
+
+truncate table cell;
+
+insert into cell (the_geom)
+select 
+(ST_Dump(
+makegrid_2d(
+ST_GeomFromText('Polygon((166 -33,178 -33,178 -48,166 -48,166 -33))', 4326), -- WGS84 SRID
+10000,-- cell step in meters
+2193) )).geom;
+
+2) NZ outline
+Using the NZ shapefile from:
+http://data.linz.govt.nz/layer/258-nz-mainland-coastlines-topo-150k/#/layer/785-nz-land-districts/
+
+Then dissolve it
+Then buffer it +0.1, then buffer it -0.1
+Then SPIT it to the database
+
+3) Intersecting cells only
+Run:
+delete from cell where id in (select c.id from cell c,nz_mask where not ST_Intersects(c.the_geom,nz_mask.the_geom))
+
+Resulting table has 4,400 records
+
+--------------------------------------------------------
+Weeds:
+
+insert into asset (code,label)
+select 'W'||i,'Weed nb '||i
+from
+(select generate_series as i from generate_series(1,180)) t
+
+--------------------------------------------------------
+
+Current occurence table:
+
+drop table current_occurence cascade;
+
+create table current_occurence as
+select 
+a.code as asset_code,
+c.the_geom as the_geom,
+1 as status
+from cell c,asset a
+order by a.code;
