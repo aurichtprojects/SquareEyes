@@ -83,7 +83,7 @@
     <script src="select2/select2.js"></script>
     <script>
 
-        var vmap, layer,assets_array;
+        var vmap, wfs_layer,assets_array,gridMaxRes=200;
 
         // Window resize function
         var rsz = function(){
@@ -125,6 +125,39 @@
                         vmap.getProjectionObject()
                     ), 5
                 );
+
+                // Style definition for the grid vector layer
+                var defaultStyle = new OpenLayers.Style({
+                    'strokeColor': 'black',
+                    'strokeOpacity': 0.5,
+                    'strokeWidth': 0.5,
+                    'fillOpacity': 0
+                });
+
+                var selectStyle = new OpenLayers.Style({
+                    'strokeColor': 'blue',
+                    'strokeWidth': 0.5,
+                    'fillOpacity': 0.5
+                });
+
+                var sm = new OpenLayers.StyleMap({'default': defaultStyle,'select': selectStyle});
+
+                // Vector layer for the grid of cells
+                wfs_layer = new OpenLayers.Layer.Vector("Grid", {
+                    strategies: [new OpenLayers.Strategy.BBOX()],
+                    protocol: new OpenLayers.Protocol.WFS({
+                        version: "1.1.0",
+                        url: "/geoserver/wfs",
+                        featureType: "CELL",
+                        featureNS: "http://www.pozi.com/project1",
+                        srsName: "EPSG:900913"
+                    }),
+                    styleMap: sm,
+                    maxResolution:gridMaxRes
+                });
+
+                vmap.addLayer(wfs_layer);
+
             }
 
             initMap();
@@ -145,6 +178,7 @@
                             // By construction, there is only one WMS layer with this name
                             vmap.removeLayer(layerToRemove[0]);
                         }
+
 
                         // Adding the new ones
                         var bwms = new OpenLayers.Layer.WMS( "WMS weed",
