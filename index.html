@@ -46,20 +46,63 @@
             float:right;
         }
 
-		#extraTools {
-			margin-top:10px;
-		}
+        #extraTools {
+          margin-top:10px;
+          text-align:center;
+        }
+
+        #extraInfo {
+          margin-top:10px;
+          text-align:center;
+        }
+
+        #extraTools div {
+          display: inline-block;
+          margin: 5px;
+          background-repeat: no-repeat;
+          border: 1px;
+        }
 
         .unselectBtnItemInactive {
           width:  24px;
           height: 22px;
-          background-image: url("openlayers/theme/default/img/draw_line_on.png");
+          background-position: -312px 0;
+          background-image: url("bootstrap/img/glyphicons-halflings-white.png");
         }
 
         .unselectBtnItemActive {
           width:  24px;
           height: 22px;
-          background-image: url("openlayers/theme/default/img/draw_line_off.png");
+          background-position: -312px 0;
+          background-image: url("bootstrap/img/glyphicons-halflings.png");
+        }
+
+        .selectByPolyItemActive {
+          width:  24px;
+          height: 22px;
+          background-position: -240px 0;
+          background-image: url("bootstrap/img/glyphicons-halflings-white.png");
+        }
+
+        .selectByPolyItemInactive {
+          width:  24px;
+          height: 22px;
+          background-position: -240px 0;
+          background-image: url("bootstrap/img/glyphicons-halflings.png");
+        }
+
+        .downloadItemActive {
+          width:  24px;
+          height: 22px;
+          background-position: -120px -24px;
+          background-image: url("bootstrap/img/glyphicons-halflings-white.png");
+        }
+
+        .downloadItemInactive {
+          width:  24px;
+          height: 22px;
+          background-position: -120px -24px;
+          background-image: url("bootstrap/img/glyphicons-halflings.png");
         }
 
     </style>
@@ -75,19 +118,21 @@
 
     <div class="container-fluid">
         <div class="row-fluid">
-			<!-- the navbar needs to be defined before the fluid content! -->
+            <!-- the sidebar needs to be defined before the map fluid content! -->
             <div id="sidebar" class="well right sidebar-nav">
                 <!-- Drop down -->
                 <input type="hidden" id="e1" style="width:250px"/>
                 <!-- Controls and additional layers -->
-				<div id="extraTools" class="hide">
-				</div>
-             </div>
+                <div id="extraTools" class="hide"></div>
+                <!-- Message / info -->
+                <div id="extraInfo" class="hide"></div>
+                <!-- Action / form -->
+                <div id="extraAction" class="hide"></div>
+            </div>
             <div class="well fluid-fixed">
                 <!--Body content-->
                 <div id="map" class="smallmap"></div>
             </div>
-
         </div>
     </div>
 
@@ -102,7 +147,7 @@
     <script src="select2/select2.js"></script>
     <script>
 
-        var vmap, wfs_layer,assets_array,gridMaxRes=200,highlightCtrl,selectCtrl,toolPanel;
+        var vmap, wfs_layer,assets_array,gridMaxRes=200,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl;
 
         // Window resize function
         var rsz = function(){
@@ -195,10 +240,47 @@
                     }
                 });
 
-                selectCtrl = new OpenLayers.Control.SelectFeature(wfs_layer,
-                    {multiple: true,
-                    toggle:   true}
-                );
+                var reportSelection = function(e) {
+                    if (e)
+                    {
+                        var nsf = e.feature.layer.selectedFeatures.length;
+
+                        // Adjust the number of cell selected if the event is an unhighlight
+                        if (e.type == "featureunhighlighted")
+                        {
+                            nsf = nsf - 1;
+                        }
+
+                        // Display the number of cells selected
+                        if (nsf>0)
+                        {
+                            $('#extraInfo').show();
+                            $('#extraInfo').html(nsf+" selected cell"+(nsf==1?"":"s"));
+                            unselectAllCtrl.activate();
+                        }
+                        else
+                        {
+                            $('#extraInfo').hide();
+                            $('#extraInfo').html("");
+                            unselectAllCtrl.deactivate();
+                        }
+                     }
+                     else
+                     {
+                            $('#extraInfo').hide();
+                            $('#extraInfo').html("");
+                            unselectAllCtrl.deactivate();
+                     }
+                };
+
+                selectCtrl = new OpenLayers.Control.SelectFeature(wfs_layer,{
+                    multiple: true,
+                    toggle: true,
+                    eventListeners: {
+                        featurehighlighted:reportSelection,
+                        featureunhighlighted:reportSelection
+                    }
+                });
 
                 // Required so that the map can still be dragged and panned even when the user clicks on a cell
                 // Based on: http://osgeo-org.1560.x6.nabble.com/vector-layer-prevents-map-pan-and-drag-td4567876.html
@@ -211,17 +293,37 @@
                 var unselectAllFeatures = function() {
                     highlightCtrl.unselectAll();
                     selectCtrl.unselectAll();
+                    selectByPolygon.unselectAll();
                     // It should not be that difficult to clear highlights/selects but this works for now
                     wfs_layer.refresh({force:true});
+                    reportSelection();
+                    selectByPolygon.deactivate();
                 };
 
                 unselectAllCtrl = new OpenLayers.Control.Button({
                     displayClass: "unselectBtn", trigger: unselectAllFeatures
                 });
 
+                selectByPolygon = new OpenLayers.Control.SelectFeature(wfs_layer,{
+                    id:'selectByPolyId',
+                    displayClass:"selectByPoly",
+                    multiple:true, // means that the selections from this tool are additive to other selections,
+                    toggle:true,
+                    box:true,
+                    eventListeners: {
+                        featurehighlighted:reportSelection,
+                        featureunhighlighted:reportSelection
+                    },
+                    type: OpenLayers.Control.TYPE_TOGGLE // the tool icon can be pushed and pushed again
+                });
+
+                downloadCtrl = new OpenLayers.Control.Button({
+                    displayClass: "download", trigger: function(){alert("Download not implemented");}
+                });
+
                 var container = document.getElementById("extraTools");
                 toolPanel = new OpenLayers.Control.Panel({div:container});
-                toolPanel.addControls([unselectAllCtrl]);
+                toolPanel.addControls([unselectAllCtrl,selectByPolygon,downloadCtrl]);
 
                 vmap.addControl(toolPanel);
 
@@ -271,6 +373,7 @@
                             // Activating the controls
                             highlightCtrl.activate();
                             selectCtrl.activate();
+                            unselectAllCtrl.deactivate();
 
                             $('#extraTools').show();
                             // Adding a panel with extra controls
