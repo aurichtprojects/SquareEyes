@@ -29,22 +29,38 @@
         }
 
         .fluid-fixed {
-        margin-right: 280px;
-        margin-left:auto !important;
-        display: block;
+            margin-right: 280px;
+            margin-left:auto !important;
+            display: block;
         }
 
         .row-fluid > .sidebar-nav {
             position: relative;
             top: 0;
-        left:auto;
-        width: 250px;
-    }
+            left:auto;
+            width: 250px;
+        }
 
         .right {
             display: block;
             float:right;
-    }
+        }
+
+		#extraTools {
+			margin-top:10px;
+		}
+
+        .unselectBtnItemInactive {
+          width:  24px;
+          height: 22px;
+          background-image: url("openlayers/theme/default/img/draw_line_on.png");
+        }
+
+        .unselectBtnItemActive {
+          width:  24px;
+          height: 22px;
+          background-image: url("openlayers/theme/default/img/draw_line_off.png");
+        }
 
     </style>
     <!--<link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">-->
@@ -64,7 +80,8 @@
                 <!-- Drop down -->
                 <input type="hidden" id="e1" style="width:250px"/>
                 <!-- Controls and additional layers -->
-
+				<div id="extraTools" class="hide">
+				</div>
              </div>
             <div class="well fluid-fixed">
                 <!--Body content-->
@@ -85,7 +102,7 @@
     <script src="select2/select2.js"></script>
     <script>
 
-        var vmap, wfs_layer,assets_array,gridMaxRes=200;
+        var vmap, wfs_layer,assets_array,gridMaxRes=200,highlightCtrl,selectCtrl,toolPanel;
 
         // Window resize function
         var rsz = function(){
@@ -163,48 +180,63 @@
 
                 vmap.addLayer(wfs_layer);
 
-				var report = function(e) {
-					OpenLayers.Console.log(e.type, e.feature.id);
-				};
+                var report = function(e) {
+                OpenLayers.Console.log(e.type, e.feature.id);
+                };
 
-				var highlightCtrl = new OpenLayers.Control.SelectFeature(wfs_layer, {
-					hover: true,
-					highlightOnly: true,
-					renderIntent: "temporary",
-					eventListeners: {
-						beforefeaturehighlighted: report,
-						featurehighlighted: report,
-						featureunhighlighted: report
-					}
-				});
+                highlightCtrl = new OpenLayers.Control.SelectFeature(wfs_layer, {
+                    hover: true,
+                    highlightOnly: true,
+                    renderIntent: "temporary",
+                    eventListeners: {
+                        beforefeaturehighlighted: report,
+                        featurehighlighted: report,
+                        featureunhighlighted: report
+                    }
+                });
 
-				var selectCtrl = new OpenLayers.Control.SelectFeature(wfs_layer,
-					{multiple: true,
-					 toggle:   true}
-				);
+                selectCtrl = new OpenLayers.Control.SelectFeature(wfs_layer,
+                    {multiple: true,
+                    toggle:   true}
+                );
 
-				// Required so that the map can still be dragged and panned even when the user clicks on a cell
-				// Based on: http://osgeo-org.1560.x6.nabble.com/vector-layer-prevents-map-pan-and-drag-td4567876.html
-				highlightCtrl.handlers.feature.stopDown = false;
-				selectCtrl.handlers.feature.stopDown = false;
+                // Required so that the map can still be dragged and panned even when the user clicks on a cell
+                // Based on: http://osgeo-org.1560.x6.nabble.com/vector-layer-prevents-map-pan-and-drag-td4567876.html
+                highlightCtrl.handlers.feature.stopDown = false;
+                selectCtrl.handlers.feature.stopDown = false;
 
-				vmap.addControl(highlightCtrl);
-				vmap.addControl(selectCtrl);
+                vmap.addControl(highlightCtrl);
+                vmap.addControl(selectCtrl);
 
-				highlightCtrl.activate();
-				selectCtrl.activate();
+                var unselectAllFeatures = function() {
+                    highlightCtrl.unselectAll();
+                    selectCtrl.unselectAll();
+                    // It should not be that difficult to clear highlights/selects but this works for now
+                    wfs_layer.refresh({force:true});
+                };
+
+                unselectAllCtrl = new OpenLayers.Control.Button({
+                    displayClass: "unselectBtn", trigger: unselectAllFeatures
+                });
+
+                var container = document.getElementById("extraTools");
+                toolPanel = new OpenLayers.Control.Panel({div:container});
+                toolPanel.addControls([unselectAllCtrl]);
+
+                vmap.addControl(toolPanel);
 
             }
 
             initMap();
-
 
             $.getJSON('assets.json', function(data) {
                 //console.log(data);
                 assets_array = data;
 
                 $("#e1").select2({
-                    data: assets_array
+                    data: assets_array,
+                    placeholder: "Select a weed",
+                    allowClear: true
                 }).on("change", function(e) {
 
                         // Removing the previous layers
@@ -215,24 +247,49 @@
                             vmap.removeLayer(layerToRemove[0]);
                         }
 
+                        // If the selection was changed to another weed (i.e. not cleared)
+                        if (e.added)
+                        {
+                            // Adding the new ones
+                            var bwms = new OpenLayers.Layer.WMS( "WMS weed",
+                                "/geoserver/PROJECT1/wms?",
+                                {
+                                    "transparent":"true",
+                                    "layers":"CURRENT_OCCURENCE",
+                                    "format":"image/png8",
+                                    "viewparams":"asset_code:"+e.added.code
+                                },{
+                                    isBaseLayer: false,
+                                    singleTile:true,
+                                    transitionEffect: 'resize'
+                                }
+                            );
 
-                        // Adding the new ones
-                        var bwms = new OpenLayers.Layer.WMS( "WMS weed",
-                            "/geoserver/PROJECT1/wms?",
-                            {
-                                "transparent":"true",
-                                "layers":"CURRENT_OCCURENCE",
-                                "format":"image/png8",
-                                "viewparams":"asset_code:"+e.added.code
-                            },{
-                                isBaseLayer: false,
-                                singleTile:true,
-                                transitionEffect: 'resize'
-                            }
-                        );
+                            // Add WMS layer to our map
+                            vmap.addLayer(bwms);
 
-                        // Add WMS layer to our map
-                        vmap.addLayer(bwms);
+                            // Activating the controls
+                            highlightCtrl.activate();
+                            selectCtrl.activate();
+
+                            $('#extraTools').show();
+                            // Adding a panel with extra controls
+                            // Box selection
+
+                            // Clear all
+
+                        }
+                        else
+                        {
+                            // De-selecting and deactivating the controls
+                            highlightCtrl.unselectAll();
+                            selectCtrl.unselectAll();
+                            highlightCtrl.deactivate();
+                            selectCtrl.deactivate();
+
+                            $('#extraTools').hide();
+
+                        }
 
                 });
 
