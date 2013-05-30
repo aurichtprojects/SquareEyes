@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>NZ - Weed Management</title>
+    <title>SquareEyes - NZ Weed Management</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -61,8 +61,10 @@
         <div class="row-fluid">
 			<!-- the navbar needs to be defined before the fluid content! -->
             <div id="sidebar" class="well right sidebar-nav">
-                <!--Sidebar content-->
+                <!-- Drop down -->
                 <input type="hidden" id="e1" style="width:250px"/>
+                <!-- Controls and additional layers -->
+
              </div>
             <div class="well fluid-fixed">
                 <!--Body content-->
@@ -111,9 +113,11 @@
                             new OpenLayers.Control.Navigation(),
                             new OpenLayers.Control.Zoom(),
                             new OpenLayers.Control.LayerSwitcher({'ascending':false}),
-                            new OpenLayers.Control.ScaleLine()
+                            new OpenLayers.Control.ScaleLine(),
+                            new OpenLayers.Control.ZoomBox({'keyMask': OpenLayers.Handler.MOD_SHIFT})
                         ],
-                        numZoomLevels:20
+                        numZoomLevels:20,
+                        theme: null
                     }
                 );
 
@@ -137,6 +141,7 @@
                 var selectStyle = new OpenLayers.Style({
                     'strokeColor': 'blue',
                     'strokeWidth': 0.5,
+                    'fillColor':'blue',
                     'fillOpacity': 0.5
                 });
 
@@ -157,6 +162,37 @@
                 });
 
                 vmap.addLayer(wfs_layer);
+
+				var report = function(e) {
+					OpenLayers.Console.log(e.type, e.feature.id);
+				};
+
+				var highlightCtrl = new OpenLayers.Control.SelectFeature(wfs_layer, {
+					hover: true,
+					highlightOnly: true,
+					renderIntent: "temporary",
+					eventListeners: {
+						beforefeaturehighlighted: report,
+						featurehighlighted: report,
+						featureunhighlighted: report
+					}
+				});
+
+				var selectCtrl = new OpenLayers.Control.SelectFeature(wfs_layer,
+					{multiple: true,
+					 toggle:   true}
+				);
+
+				// Required so that the map can still be dragged and panned even when the user clicks on a cell
+				// Based on: http://osgeo-org.1560.x6.nabble.com/vector-layer-prevents-map-pan-and-drag-td4567876.html
+				highlightCtrl.handlers.feature.stopDown = false;
+				selectCtrl.handlers.feature.stopDown = false;
+
+				vmap.addControl(highlightCtrl);
+				vmap.addControl(selectCtrl);
+
+				highlightCtrl.activate();
+				selectCtrl.activate();
 
             }
 
