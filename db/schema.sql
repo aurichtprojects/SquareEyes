@@ -17,8 +17,7 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE asset (
-    gid smallint NOT NULL,
-    code character varying(3),
+    id smallint NOT NULL,
     label character varying(64)
 );
 
@@ -39,7 +38,7 @@ CREATE SEQUENCE asset_gid_seq
 -- Name: asset_gid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE asset_gid_seq OWNED BY asset.gid;
+ALTER SEQUENCE asset_gid_seq OWNED BY asset.id;
 
 
 --
@@ -57,9 +56,9 @@ CREATE TABLE cell (
 --
 
 CREATE TABLE current_occurence (
-    asset_code character varying(3),
     cell_id smallint,
-    status smallint
+    status_id smallint,
+    asset_id integer
 );
 
 
@@ -68,7 +67,7 @@ CREATE TABLE current_occurence (
 --
 
 CREATE TABLE observation (
-    gid smallint NOT NULL,
+    id smallint NOT NULL,
     asset_id smallint,
     status smallint,
     user_id smallint,
@@ -84,7 +83,7 @@ CREATE TABLE observation (
 --
 
 CREATE TABLE observation_coverage (
-    gid smallint NOT NULL,
+    id smallint NOT NULL,
     observation_id smallint,
     cell_id smallint
 );
@@ -106,7 +105,7 @@ CREATE SEQUENCE observation_coverage_gid_seq
 -- Name: observation_coverage_gid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE observation_coverage_gid_seq OWNED BY observation_coverage.gid;
+ALTER SEQUENCE observation_coverage_gid_seq OWNED BY observation_coverage.id;
 
 
 --
@@ -125,7 +124,7 @@ CREATE SEQUENCE observation_gid_seq
 -- Name: observation_gid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE observation_gid_seq OWNED BY observation.gid;
+ALTER SEQUENCE observation_gid_seq OWNED BY observation.id;
 
 
 --
@@ -133,7 +132,7 @@ ALTER SEQUENCE observation_gid_seq OWNED BY observation.gid;
 --
 
 CREATE TABLE r_role (
-    gid smallint NOT NULL,
+    id smallint NOT NULL,
     label character varying(32)
 );
 
@@ -143,8 +142,8 @@ CREATE TABLE r_role (
 --
 
 CREATE TABLE r_status (
-    gid smallint NOT NULL,
-    label character varying(16)
+    id smallint NOT NULL,
+    label character varying(32)
 );
 
 
@@ -164,7 +163,7 @@ CREATE SEQUENCE r_status_gid_seq
 -- Name: r_status_gid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE r_status_gid_seq OWNED BY r_status.gid;
+ALTER SEQUENCE r_status_gid_seq OWNED BY r_status.id;
 
 
 --
@@ -172,7 +171,7 @@ ALTER SEQUENCE r_status_gid_seq OWNED BY r_status.gid;
 --
 
 CREATE TABLE "user" (
-    gid smallint NOT NULL,
+    id smallint NOT NULL,
     name character varying(32),
     role_id integer
 );
@@ -194,50 +193,42 @@ CREATE SEQUENCE user_gid_seq
 -- Name: user_gid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE user_gid_seq OWNED BY "user".gid;
+ALTER SEQUENCE user_gid_seq OWNED BY "user".id;
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY asset ALTER COLUMN gid SET DEFAULT nextval('asset_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY observation ALTER COLUMN gid SET DEFAULT nextval('observation_gid_seq'::regclass);
+ALTER TABLE ONLY asset ALTER COLUMN id SET DEFAULT nextval('asset_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY observation_coverage ALTER COLUMN gid SET DEFAULT nextval('observation_coverage_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY r_status ALTER COLUMN gid SET DEFAULT nextval('r_status_gid_seq'::regclass);
+ALTER TABLE ONLY observation ALTER COLUMN id SET DEFAULT nextval('observation_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY "user" ALTER COLUMN gid SET DEFAULT nextval('user_gid_seq'::regclass);
+ALTER TABLE ONLY observation_coverage ALTER COLUMN id SET DEFAULT nextval('observation_coverage_gid_seq'::regclass);
 
 
 --
--- Name: asset_code_uk; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY asset
-    ADD CONSTRAINT asset_code_uk UNIQUE (code);
+ALTER TABLE ONLY r_status ALTER COLUMN id SET DEFAULT nextval('r_status_gid_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "user" ALTER COLUMN id SET DEFAULT nextval('user_gid_seq'::regclass);
 
 
 --
@@ -245,7 +236,7 @@ ALTER TABLE ONLY asset
 --
 
 ALTER TABLE ONLY asset
-    ADD CONSTRAINT asset_pk PRIMARY KEY (gid);
+    ADD CONSTRAINT asset_pk PRIMARY KEY (id);
 
 
 --
@@ -261,7 +252,7 @@ ALTER TABLE ONLY cell
 --
 
 ALTER TABLE ONLY observation_coverage
-    ADD CONSTRAINT observation_coverage_pk PRIMARY KEY (gid);
+    ADD CONSTRAINT observation_coverage_pk PRIMARY KEY (id);
 
 
 --
@@ -269,7 +260,7 @@ ALTER TABLE ONLY observation_coverage
 --
 
 ALTER TABLE ONLY observation
-    ADD CONSTRAINT observation_pk PRIMARY KEY (gid);
+    ADD CONSTRAINT observation_pk PRIMARY KEY (id);
 
 
 --
@@ -277,7 +268,7 @@ ALTER TABLE ONLY observation
 --
 
 ALTER TABLE ONLY r_role
-    ADD CONSTRAINT role_pk PRIMARY KEY (gid);
+    ADD CONSTRAINT role_pk PRIMARY KEY (id);
 
 
 --
@@ -285,7 +276,7 @@ ALTER TABLE ONLY r_role
 --
 
 ALTER TABLE ONLY r_status
-    ADD CONSTRAINT status_pk PRIMARY KEY (gid);
+    ADD CONSTRAINT status_pk PRIMARY KEY (id);
 
 
 --
@@ -301,7 +292,7 @@ ALTER TABLE ONLY "user"
 --
 
 ALTER TABLE ONLY "user"
-    ADD CONSTRAINT user_pk PRIMARY KEY (gid);
+    ADD CONSTRAINT user_pk PRIMARY KEY (id);
 
 
 --
@@ -309,15 +300,6 @@ ALTER TABLE ONLY "user"
 --
 
 CREATE INDEX cell_the_geom_idx ON cell USING gist (the_geom);
-
-
---
--- Name: co_asset_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX co_asset_idx ON current_occurence USING btree (asset_code);
-
-ALTER TABLE current_occurence CLUSTER ON co_asset_idx;
 
 
 --
