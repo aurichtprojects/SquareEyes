@@ -50,7 +50,7 @@ create table current_occurence as
 select 
 a.code as asset_code,
 c.id as cell_id,
-cast(trunc(random() * 2 + 1) as smallint) as status
+cast(trunc(random() * 3 + 1) as smallint) as status
 from cell c,asset a
 order by a.code;
 
