@@ -303,6 +303,13 @@ CREATE INDEX cell_the_geom_idx ON cell USING gist (the_geom);
 
 
 --
+-- Name: co_asset_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX co_asset_id_idx ON current_occurence USING btree (asset_id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
