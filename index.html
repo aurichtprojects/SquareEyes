@@ -51,6 +51,11 @@
           text-align:center;
         }
 
+        #extraLayers {
+          margin-top:10px;
+          text-align:left;
+        }
+
         #extraInfo {
           margin-top:10px;
           text-align:center;
@@ -61,6 +66,15 @@
           margin: 5px;
           background-repeat: no-repeat;
           border: 1px;
+        }
+
+        label {
+            display: inline-block;
+            margin: 5px;
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            margin: 0;
         }
 
         .unselectBtnItemInactive {
@@ -126,6 +140,8 @@
                 <div id="extraTools" class="hide"></div>
                 <!-- Message / info -->
                 <div id="extraInfo" class="hide"></div>
+                <!-- Message / info -->
+                <div id="extraLayers" class="hide"></div>
                 <!-- Action / form -->
                 <div id="extraAction" class="hide"></div>
             </div>
@@ -174,7 +190,6 @@
                         controls:[
                             new OpenLayers.Control.Navigation(),
                             new OpenLayers.Control.Zoom(),
-                            new OpenLayers.Control.LayerSwitcher({'ascending':false}),
                             new OpenLayers.Control.ScaleLine(),
                             new OpenLayers.Control.ZoomBox({'keyMask': OpenLayers.Handler.MOD_SHIFT})
                         ],
@@ -183,7 +198,14 @@
                     }
                 );
 
-                osm = new OpenLayers.Layer.OSM("Simple OSM Map");
+                vmap.addControl(new OpenLayers.Control.LayerSwitcher(
+                    {'div':$('#extraLayers')[0]}
+                ));
+
+                // Rewriting the text for Overlays, based on the OpenLayers control nested structure
+                $('#extraLayers div div.dataLbl').html("Layers available:");
+
+                osm = new OpenLayers.Layer.OSM("Simple OSM Map","",{'displayInLayerSwitcher':false});
                 vmap.addLayer(osm);
                 vmap.setCenter(
                     new OpenLayers.LonLat(172, -40).transform(
@@ -220,8 +242,10 @@
                         srsName: "EPSG:900913"
                     }),
                     styleMap: sm,
-                    maxResolution:gridMaxRes
-                });
+                    maxResolution:gridMaxRes,
+                    displayInLayerSwitcher:false
+                    }
+                );
 
                 vmap.addLayer(wfs_layer);
 
@@ -382,10 +406,10 @@
                             unselectAllCtrl.deactivate();
 
                             $('#extraTools').show();
-                            // Adding a panel with extra controls
-                            // Box selection
 
-                            // Clear all
+                            // Showing panel with extra layer control
+                            $('#extraLayers').show();
+
 
                         }
                         else
@@ -397,6 +421,7 @@
                             selectCtrl.deactivate();
 
                             $('#extraTools').hide();
+                            $('#extraLayers').hide();
 
                         }
 
