@@ -4,9 +4,9 @@
  */
 
 # Includes
-require_once("../inc/error.inc.php");
-require_once("../inc/database.inc.php");
-require_once("../inc/security.inc.php");
+require_once("inc/error.inc.php");
+require_once("inc/database.inc.php");
+require_once("inc/security.inc.php");
 
 # Set arguments for error email
 $err_user_name = "Herve";
@@ -23,7 +23,7 @@ try {
     $recordSet->execute();
 
 	if ($format == 'json') {
-		require_once("../inc/json.pdo.inc.php");
+		require_once("inc/json.pdo.inc.php");
 		header("Content-Type: application/json");
 		echo rs2json($recordSet);
 	}
