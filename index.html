@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="openlayers/theme/default/style.css" type="text/css">
     <link rel="stylesheet" href="ol-style.css" type="text/css">
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="bootstrap/css/bootstrap-fileupload.min.css" rel="stylesheet">
     <link href="select2/select2.css" rel="stylesheet"/>
     <style type="text/css">
 
@@ -26,6 +27,11 @@
 
         .well {
             padding:9px;
+            margin-bottom:0;
+        }
+
+        .scrollable {
+            overflow: auto;
         }
 
         .fluid-fixed {
@@ -51,16 +57,6 @@
           text-align:center;
         }
 
-        #extraLayers {
-          margin-top:10px;
-          text-align:left;
-        }
-
-        #extraInfo {
-          margin-top:10px;
-          text-align:center;
-        }
-
         #extraTools div {
           display: inline-block;
           margin: 5px;
@@ -68,9 +64,25 @@
           border: 1px;
         }
 
+        #extraLayers {
+          margin:10px 0 20px;
+          text-align:left;
+        }
+
+        #extraInfo {
+          text-align:left;
+        }
+
+        .labelSpan {
+            display: inline;
+        }
+
         label {
-            display: inline-block;
             margin: 5px;
+        }
+
+        legend {
+            margin-bottom: 0;
         }
 
         input[type="radio"], input[type="checkbox"] {
@@ -133,17 +145,48 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <!-- the sidebar needs to be defined before the map fluid content! -->
-            <div id="sidebar" class="well right sidebar-nav">
+            <div id="sidebar" class="well right sidebar-nav scrollable">
                 <!-- Drop down -->
-                <input type="hidden" id="e1" style="width:250px"/>
+                <input type="hidden" id="e1" style="width:230px"/>
                 <!-- Controls and additional layers -->
                 <div id="extraTools" class="hide"></div>
                 <!-- Message / info -->
-                <div id="extraInfo" class="hide"></div>
-                <!-- Message / info -->
                 <div id="extraLayers" class="hide"></div>
                 <!-- Action / form -->
-                <div id="extraAction" class="hide"></div>
+                <div id="extraActions" class="hide">
+                    <form id="mod_form">
+                        <fieldset>
+                            <legend>Modify / Moderate</legend>
+                            <div id="extraInfo" class="hide"></div>
+                            <!-- Message / info -->
+                            <label class="radio">
+                                <input type="radio" name="optionsRadios" id="optionsRadios1" value="1">Reject
+                            </label>
+                            <label class="radio">
+                                <input type="radio" name="optionsRadios" id="optionsRadios2" value="2">Report presence
+                            </label>
+                            <label class="radio">
+                                <input type="radio" name="optionsRadios" id="optionsRadios3" value="3">Approve
+                            </label>
+                            <input type="text" placeholder="Your email address">
+                            <textarea rows="2" placeholder="Your comments"></textarea>
+                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                <div class="fileupload-new thumbnail" style="width: 100px; height: 100px;">
+                                    <img src="http://www.placehold.it/100x100/EFEFEF/AAAAAA" />
+                                </div>
+                                <div class="fileupload-preview fileupload-exists thumbnail" style="width: 100px; height: 100px;"></div>
+                                <span class="btn btn-file">
+                                    <span class="fileupload-new">Attach photo</span>
+                                    <span class="fileupload-exists">Change photo</span>
+                                    <input type="file" />
+                                </span>
+                                <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove photo</a>
+                            </div>
+                            <button type="button" id="save" class="btn btn-primary right">Save</button>
+                            <button type="button" id="cancel" class="btn btn-danger">Cancel</button>
+                        </fieldset>
+                    </form>
+                </div>
             </div>
             <div class="well fluid-fixed">
                 <!--Body content-->
@@ -160,6 +203,7 @@
     <!-- based on http://encosia.com/3-reasons-why-you-should-let-google-host-jquery-for-you/ -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
     <script src="bootstrap/js/bootstrap.js"></script>
+    <script src="bootstrap/js/bootstrap-fileupload.js"></script>
     <script src="select2/select2.js"></script>
     <script>
 
@@ -170,8 +214,10 @@
             var h = $(window).height();
             var w = $(window).width();
             // Setting height to window height minus the header and footer sizes
-            $("#map").css('height',h - 62);
+            $("#map").css('height',h - 42);
             $("#map").css('width', w - 322);
+            // Setting the height of the sidebar as well, as it's getting an unwelcome scrollbar lateral shift
+            $("#sidebar").css('height',h - 40)
         };
 
         // Initial width/height values are required for display of vector layer
@@ -203,7 +249,7 @@
                 ));
 
                 // Rewriting the text for Overlays, based on the OpenLayers control nested structure
-                $('#extraLayers div div.dataLbl').html("Layers available:");
+                $('#extraLayers div div.dataLbl').html("<legend>Layers available</legend>");
 
                 osm = new OpenLayers.Layer.OSM("Simple OSM Map","",{'displayInLayerSwitcher':false});
                 vmap.addLayer(osm);
@@ -279,12 +325,14 @@
                         if (nsf>0)
                         {
                             $('#extraInfo').show();
-                            $('#extraInfo').html(nsf+" selected cell"+(nsf==1?"":"s"));
+                            $('#extraActions').show();
+                            $('#extraInfo').html("For the "+(nsf==1?"":nsf+" ")+"selected cell"+(nsf==1?"":"s")+":");
                             unselectAllCtrl.activate();
                         }
                         else
                         {
                             $('#extraInfo').hide();
+                            $('#extraActions').hide();
                             $('#extraInfo').html("");
                             unselectAllCtrl.deactivate();
                         }
@@ -292,6 +340,7 @@
                      else
                      {
                             $('#extraInfo').hide();
+                            $('#extraActions').hide();
                             $('#extraInfo').html("");
                             unselectAllCtrl.deactivate();
                      }
@@ -338,7 +387,7 @@
                         featurehighlighted:reportSelection,
                         featureunhighlighted:reportSelection
                     },
-                    type: OpenLayers.Control.TYPE_TOGGLE // the tool icon can be pushed and pushed again
+                    type: OpenLayers.Control.TYPE_TOGGLE // the tool icon can be pushed and pushed back
                 });
 
                 downloadCtrl = new OpenLayers.Control.Button({
@@ -372,7 +421,7 @@
                 }).on("change", function(e) {
 
                         // Removing the previous layers
-                        var layerToRemove = vmap.getLayersByName("WMS weed");
+                        var layerToRemove = vmap.getLayersByName("Current occurence");
                         if (layerToRemove.length)
                         {
                             // By construction, there is only one WMS layer with this name
@@ -383,7 +432,7 @@
                         if (e.added)
                         {
                             // Adding the new ones
-                            var bwms = new OpenLayers.Layer.WMS( "WMS weed",
+                            var bwms = new OpenLayers.Layer.WMS("Current occurence",
                                 "/geoserver/PROJECT1/wms?",
                                 {
                                     "transparent":"true",
@@ -405,10 +454,12 @@
                             selectCtrl.activate();
                             unselectAllCtrl.deactivate();
 
+                            // Showing panel with extra tools
                             $('#extraTools').show();
 
                             // Showing panel with extra layer control
                             $('#extraLayers').show();
+
 
 
                         }
@@ -422,12 +473,26 @@
 
                             $('#extraTools').hide();
                             $('#extraLayers').hide();
+                            $('#extraActions').hide();
 
                         }
 
                 });
 
             });
+
+            // Initialising the file upload component
+            $('.fileupload').fileupload({uploadType:'image'});
+
+            $('#cancel').on('click',function(){
+                //alert("Clicked");
+                $('.fileupload').fileupload('reset');
+                $('#mod_form').each (function(){this.reset();});
+            })
+
+            $('#save').on('click',function(){
+                alert("Saving");
+            })
 
         });
     </script>
