@@ -18,12 +18,10 @@ function rs2json($rs)
 
     $rowCounter = 0;
 
-
-
         while ($row  = $rs->fetch(PDO::FETCH_ASSOC))
 		{
 			if (strlen($rowOutput) > 0) $rowOutput .= ',';
-            $rowOutput .= '{"row":{';
+            $rowOutput .= '{';
 
 			$cols = count($row);
 			$colCounter = 1;
@@ -42,7 +40,7 @@ function rs2json($rs)
 				}
 				$colCounter++;
 			}
-			$rowOutput .= '}}';
+			$rowOutput .= '}';
 			$rowCounter++;
 		}
 
