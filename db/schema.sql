@@ -58,7 +58,7 @@ CREATE TABLE cell (
 CREATE TABLE current_occurence (
     cell_id smallint,
     status_id smallint,
-    asset_id integer
+    asset_id smallint
 );
 
 
