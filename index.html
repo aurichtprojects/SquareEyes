@@ -331,9 +331,9 @@
 
             initMap();
 
-            $.getJSON('assets.json', function(data) {
+            $.getJSON('ws/ws_asset_list.php', function(data) {
                 //console.log(data);
-                assets_array = data;
+                assets_array = data.rows;
 
                 $("#e1").select2({
                     data: assets_array,
