@@ -332,7 +332,13 @@
             initMap();
 
             $.getJSON('ws/ws_asset_list.php', function(data) {
-                //console.log(data);
+                // Asset JSON must have a "rows" attribute that contains an array of id,text pair values 
+                // {"total_rows":"184","rows":
+                //      [
+                //       {"id":"1","text":"Acer pseudoplatanus"},
+                //       {"id":"2","text":"Agapanthus praecox"}, ...
+                //      ]
+                // }
                 assets_array = data.rows;
 
                 $("#e1").select2({
