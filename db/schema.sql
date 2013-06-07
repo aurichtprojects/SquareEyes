@@ -82,7 +82,7 @@ CREATE TABLE observation (
     asset_id smallint,
     status_id smallint,
     user_id smallint,
-    ts timestamp with time zone,
+    ts timestamp with time zone DEFAULT now(),
     email_address character varying(64),
     comments text,
     photo character varying(255)
