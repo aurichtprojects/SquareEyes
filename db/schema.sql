@@ -80,7 +80,7 @@ CREATE TABLE current_occurence (
 CREATE TABLE observation (
     id smallint NOT NULL,
     asset_id smallint,
-    status smallint,
+    status_id smallint,
     user_id smallint,
     ts timestamp with time zone,
     email_address character varying(64),
