@@ -154,39 +154,40 @@
                 <div id="extraLayers" class="hide"></div>
                 <!-- Action / form -->
                 <div id="extraActions" class="hide">
-                    <form id="mod_form">
-                        <fieldset>
-                            <legend>Modify / Moderate</legend>
-                            <div id="extraInfo" class="hide"></div>
-                            <!-- Message / info -->
-                            <label class="radio">
-                                <input type="radio" name="optionsRadios" id="optionsRadios1" value="1">Reject
-                            </label>
-                            <label class="radio">
-                                <input type="radio" name="optionsRadios" id="optionsRadios2" value="2">Report presence
-                            </label>
-                            <label class="radio">
-                                <input type="radio" name="optionsRadios" id="optionsRadios3" value="3">Approve
-                            </label>
-                            <input type="text" placeholder="Your email address">
-                            <textarea rows="2" placeholder="Your comments"></textarea>
-                            <div class="fileupload fileupload-new" data-provides="fileupload">
-                                <div class="fileupload-new thumbnail" style="width: 100px; height: 100px;">
-                                    <img src="http://www.placehold.it/100x100/EFEFEF/AAAAAA" />
-                                </div>
-                                <div class="fileupload-preview fileupload-exists thumbnail" style="width: 100px; height: 100px;"></div>
-                                <span class="btn btn-file">
-                                    <span class="fileupload-new">Attach photo</span>
-                                    <span class="fileupload-exists">Change photo</span>
-                                    <input type="file" />
-                                </span>
-                                <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove photo</a>
+                    <form id="mod_form" action="ws/ws_create_observation.php" method="POST">
+                        <legend>Modify / Moderate</legend>
+                        <div id="extraInfo" class="hide"></div>
+                        <!-- Message / info -->
+                        <label class="radio">
+                            <input type="radio" name="field_optionsRadios" id="optionsRadios1" value="1">Reject
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="field_optionsRadios" id="optionsRadios2" value="2">Report presence
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="field_optionsRadios" id="optionsRadios3" value="3">Approve
+                        </label>
+                        <input type="text" name="field_email_address" placeholder="Your email address">
+                        <textarea rows="2" name="field_comment" placeholder="Your comments"></textarea>
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                            <div class="fileupload-new thumbnail" style="width: 100px; height: 100px;">
+                                <img src="http://www.placehold.it/100x100/EFEFEF/AAAAAA&text=no+image" />
                             </div>
-                            <button type="button" id="save" class="btn btn-primary right">Save</button>
-                            <button type="button" id="cancel" class="btn btn-danger">Cancel</button>
-                        </fieldset>
+                            <div class="fileupload-preview fileupload-exists thumbnail" style="width: 100px; height: 100px;"></div>
+                            <span class="btn btn-file">
+                                <span class="fileupload-new">Attach photo</span>
+                                <span class="fileupload-exists">Change photo</span>
+                                <input name="field_file" type="file" />
+                            </span>
+                            <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove photo</a>
+                        </div>
+                        <input type="hidden" name="field_asset" value="">
+                        <input type="hidden" name="field_selected_cells" value="">
+                        <button type="button" id="save" class="btn btn-primary right">Save</button>
+                        <button type="button" id="cancel" class="btn btn-danger">Cancel</button>
                     </form>
                 </div>
+                <div id="formOutput"></div>
             </div>
             <div class="well fluid-fixed">
                 <!--Body content-->
@@ -203,6 +204,7 @@
     <!-- based on http://encosia.com/3-reasons-why-you-should-let-google-host-jquery-for-you/ -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
     <script src="bootstrap/js/bootstrap.js"></script>
+    <script src="jquery.form.js"></script>
     <script src="bootstrap/js/bootstrap-fileupload.js"></script>
     <script src="select2/select2.js"></script>
     <script>
@@ -506,7 +508,26 @@
             })
 
             $('#save').on('click',function(){
-                alert("Saving");
+                // Modifying hidden values before submission:
+                // Currently selected asset
+                $('form input[name="field_asset"]').val($("#e1")[0].value);
+                // Currently selected cells
+                var cell_arr = [];
+                for (f in wfs_layer.selectedFeatures)
+                {
+                    if (wfs_layer.selectedFeatures[f].fid)
+                    {
+                        // Pushing elements in the array
+                        cell_arr.push(wfs_layer.selectedFeatures[f].fid.split('.')[1])
+                    }
+                }
+                $('form input[name="field_selected_cells"]').val(cell_arr);
+
+                // Submitting the form
+                var mod_form_data = $('#mod_form').ajaxSubmit({target:'#formOutput'});
+
+                return false; 
+
             })
 
         });
