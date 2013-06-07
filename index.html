@@ -147,7 +147,7 @@
             <!-- the sidebar needs to be defined before the map fluid content! -->
             <div id="sidebar" class="well right sidebar-nav scrollable">
                 <!-- Drop down -->
-                <input type="hidden" id="e1" style="width:230px"/>
+                <input type="hidden" id="e1" style="width:235px"/>
                 <!-- Controls and additional layers -->
                 <div id="extraTools" class="hide"></div>
                 <!-- Message / info -->
@@ -432,7 +432,7 @@
                         if (e.added)
                         {
                             // Adding the new ones
-                            var bwms = new OpenLayers.Layer.WMS("Current occurence",
+                            var co_wms = new OpenLayers.Layer.WMS("Current occurence",
                                 "/geoserver/PROJECT1/wms?",
                                 {
                                     "transparent":"true",
@@ -446,8 +446,23 @@
                                 }
                             );
 
+                           var bo_wms = new OpenLayers.Layer.WMS("Baseline occurence",
+                                "/geoserver/PROJECT1/wms?",
+                                {
+                                    "transparent":"true",
+                                    "layers":"BASELINE_OCCURENCE",
+                                    "format":"image/png8",
+                                    "viewparams":"asset_id:"+e.added.id
+                                },{
+                                    isBaseLayer: false,
+                                    singleTile:true,
+                                    transitionEffect: 'resize',
+                                    visibility: false
+                                }
+                            );
+
                             // Add WMS layer to our map
-                            vmap.addLayer(bwms);
+                            vmap.addLayers([co_wms,bo_wms]);
 
                             // Activating the controls
                             highlightCtrl.activate();

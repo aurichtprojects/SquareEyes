@@ -42,6 +42,17 @@ ALTER SEQUENCE asset_gid_seq OWNED BY asset.id;
 
 
 --
+-- Name: baseline_occurence; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE baseline_occurence (
+    cell_id smallint,
+    status_id smallint,
+    asset_id smallint
+);
+
+
+--
 -- Name: cell; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -293,6 +304,15 @@ ALTER TABLE ONLY "user"
 
 ALTER TABLE ONLY "user"
     ADD CONSTRAINT user_pk PRIMARY KEY (id);
+
+
+--
+-- Name: bo_asset_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX bo_asset_id_idx ON baseline_occurence USING btree (asset_id);
+
+ALTER TABLE baseline_occurence CLUSTER ON bo_asset_id_idx;
 
 
 --
