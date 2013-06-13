@@ -330,6 +330,20 @@ CREATE INDEX co_asset_id_idx ON current_occurence USING btree (asset_id);
 
 
 --
+-- Name: co_cell_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX co_cell_id_idx ON current_occurence USING btree (cell_id);
+
+
+--
+-- Name: obs2co; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER obs2co AFTER INSERT OR DELETE OR UPDATE ON observation_coverage FOR EACH ROW EXECUTE PROCEDURE observation_to_current_occurence();
+
+
+--
 -- PostgreSQL database dump complete
 --
 
