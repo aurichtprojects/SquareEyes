@@ -523,8 +523,24 @@
                 }
                 $('form input[name="field_selected_cells"]').val(cell_arr);
 
+                var processJson = function(data){
+                    if (data.success){
+                        var layerToRefresh = vmap.getLayersByName("Current occurence");
+                        if (layerToRefresh.length)
+                        {
+                            // By construction, there is only one WMS layer with this name
+                            layerToRefresh[0].redraw(true);
+                        }
+                    }
+                };
+
                 // Submitting the form
-                var mod_form_data = $('#mod_form').ajaxSubmit({target:'#formOutput'});
+                var mod_form_data = $('#mod_form').ajaxSubmit({
+                    // dataType identifies the expected content type of the server response 
+                    dataType: 'json',
+                    // success identifies the function to invoke when the server response has been received 
+                    success: processJson
+                });
 
                 return false; 
 
