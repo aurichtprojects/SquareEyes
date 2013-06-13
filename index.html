@@ -209,7 +209,7 @@
     <script src="select2/select2.js"></script>
     <script>
 
-        var vmap, wfs_layer,assets_array,gridMaxRes=400,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl;
+        var vmap, wfs_layer,assets_array,gridMaxRes=400,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl,unselectAllFeatures;
 
         // Window resize function
         var rsz = function(){
@@ -330,6 +330,7 @@
                             $('#extraActions').show();
                             $('#extraInfo').html("For the "+(nsf==1?"":nsf+" ")+"selected cell"+(nsf==1?"":"s")+":");
                             unselectAllCtrl.activate();
+                            $('#formOutput').html("").hide();
                         }
                         else
                         {
@@ -337,6 +338,7 @@
                             $('#extraActions').hide();
                             $('#extraInfo').html("");
                             unselectAllCtrl.deactivate();
+                            $('#formOutput').html("").hide();
                         }
                      }
                      else
@@ -345,6 +347,7 @@
                             $('#extraActions').hide();
                             $('#extraInfo').html("");
                             unselectAllCtrl.deactivate();
+                            $('#formOutput').html("").hide();
                      }
                 };
 
@@ -365,7 +368,7 @@
                 vmap.addControl(highlightCtrl);
                 vmap.addControl(selectCtrl);
 
-                var unselectAllFeatures = function() {
+                unselectAllFeatures = function() {
                     highlightCtrl.unselectAll();
                     selectCtrl.unselectAll();
                     selectByPolygon.unselectAll();
@@ -531,6 +534,17 @@
                             // By construction, there is only one WMS layer with this name
                             layerToRefresh[0].redraw(true);
                         }
+                        var img_block = " (no photo)";
+                        if (data.uploaded_img != "NONE")
+                        {
+                            img_block = " <a href='"+data.uploaded_img+"' target=\"_blank\"><img height=30 width=30 src='"+data.uploaded_img+"'/></a>";
+                        }
+
+                        // Clearing up the form and the selection
+                        $('#cancel').click();
+                        unselectAllFeatures();
+
+                        $('#formOutput').html("Created observation #"+data.observation_id+img_block).show();
                     }
                 };
 
