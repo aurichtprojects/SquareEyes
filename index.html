@@ -168,8 +168,9 @@
                 <input type="hidden" id="e1" style="width:235px"/>
                 <!-- Controls and additional layers -->
                 <div id="baseTools">
-                    <i id="loginTool" class="icon-user singleLineTools pointer" style="margin-top:15px;margin-right:60px;"></i>
+                    <i id="loginTool" class="icon-user singleLineTools pointer" style="margin:15px 50px 15px 5px;"></i>
                     <div id="extraTools" class="hide pointer"></div>
+                    <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:20px;"></div>
                 </div>
                 <!-- Message / info -->
                 <div id="extraLayers" class="hide"></div>
@@ -319,9 +320,11 @@
                 vmap.addLayer(wfs_layer);
 
                 var report = function(e) {
-                    OpenLayers.Console.log(e.type, e.feature.id);
-                    // Report currently highlight cell?
+                    $('#currentCell').html(e.feature.fid.split(".")[1]);
+                };
 
+                var unreport = function(e) {
+                    $('#currentCell').html("");
                 };
 
                 highlightCtrl = new OpenLayers.Control.SelectFeature(wfs_layer, {
@@ -329,9 +332,8 @@
                     highlightOnly: true,
                     renderIntent: "temporary",
                     eventListeners: {
-                        beforefeaturehighlighted: report,
                         featurehighlighted: report,
-                        featureunhighlighted: report
+                        featureunhighlighted: unreport
                     }
                 });
 
