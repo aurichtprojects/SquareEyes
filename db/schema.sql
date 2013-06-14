@@ -184,7 +184,8 @@ ALTER SEQUENCE r_status_gid_seq OWNED BY r_status.id;
 CREATE TABLE "user" (
     id smallint NOT NULL,
     name character varying(32),
-    role_id integer
+    role_id integer,
+    password character varying(32)
 );
 
 
