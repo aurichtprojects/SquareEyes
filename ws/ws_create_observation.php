@@ -19,9 +19,8 @@ try {
 	$p_asset_id = $_REQUEST['field_asset'];
 	$p_cells_id = $_REQUEST['field_selected_cells'];
 	$p_option_radio = $_REQUEST['field_options_radios'];
-	$p_email_address = $_REQUEST['field_email_address'];
-	$p_comment = $_REQUEST['field_comment'];
-
+	$p_email_address = sanitizeTextParameter($_REQUEST['field_email_address']);
+	$p_comment = sanitizeTextParameter($_REQUEST['field_comment']);
 }
 catch (Exception $e) {
     trigger_error("Caught Exception: " . $e->getMessage(), E_USER_ERROR);
@@ -85,6 +84,7 @@ try {
 			// Building the filename out of the observation number and the mime type
 			$target_path = $upload_path . $obs_id .".". $fext;
 
+			// Moving the uploaded file from tmp dir to uploads dir
 			if(move_uploaded_file($_FILES['field_file']['tmp_name'], $target_path)) {
 				// Image web path:
 				$uploaded_img_webpath = "http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/".$target_path;

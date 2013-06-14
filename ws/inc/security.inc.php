@@ -16,6 +16,10 @@ function sanitizeSQL ($sql) {
 	return $sql;
 }
 
+function sanitizeTextParameter ($p) {
+    return str_replace("'", "''", $p);
+}
+
 /**
  * Block List
  * This is the area to do white or black lists for security.
