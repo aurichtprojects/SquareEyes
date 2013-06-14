@@ -52,9 +52,23 @@
             float:right;
         }
 
+        .left {
+            display: block;
+            float:left;
+        }
+
+        .singleLineTools {
+            display: inline-block;
+            vertical-align:top;
+        }
+
         #extraTools {
           margin-top:10px;
           text-align:center;
+        }
+
+        .pointer {
+            cursor: pointer;
         }
 
         #extraTools div {
@@ -71,6 +85,10 @@
 
         #extraInfo {
           text-align:left;
+        }
+
+        #formOutput {
+            font-size:12px;
         }
 
         .labelSpan {
@@ -120,14 +138,14 @@
         .downloadItemActive {
           width:  24px;
           height: 22px;
-          background-position: -120px -24px;
+          background-position: -96px -24px;
           background-image: url("bootstrap/img/glyphicons-halflings-white.png");
         }
 
         .downloadItemInactive {
           width:  24px;
           height: 22px;
-          background-position: -120px -24px;
+          background-position: -96px -24px;
           background-image: url("bootstrap/img/glyphicons-halflings.png");
         }
 
@@ -149,7 +167,10 @@
                 <!-- Drop down -->
                 <input type="hidden" id="e1" style="width:235px"/>
                 <!-- Controls and additional layers -->
-                <div id="extraTools" class="hide"></div>
+                <div id="baseTools">
+                    <i id="loginTool" class="icon-user singleLineTools pointer" style="margin-top:15px;margin-right:60px;"></i>
+                    <div id="extraTools" class="hide pointer"></div>
+                </div>
                 <!-- Message / info -->
                 <div id="extraLayers" class="hide"></div>
                 <!-- Action / form -->
@@ -187,7 +208,7 @@
                         <button type="button" id="cancel" class="btn btn-danger">Cancel</button>
                     </form>
                 </div>
-                <div id="formOutput"></div>
+                <div id="formOutput" class="well hide"></div>
             </div>
             <div class="well fluid-fixed">
                 <!--Body content-->
@@ -299,6 +320,8 @@
 
                 var report = function(e) {
                     OpenLayers.Console.log(e.type, e.feature.id);
+                    // Report currently highlight cell?
+
                 };
 
                 highlightCtrl = new OpenLayers.Control.SelectFeature(wfs_layer, {
@@ -402,6 +425,10 @@
                 toolPanel = new OpenLayers.Control.Panel({div:container});
                 toolPanel.addControls([unselectAllCtrl,selectByPolygon,downloadCtrl]);
 
+                $('#loginTool').click(function(){
+                    alert("Login not implemented");
+                })
+
                 vmap.addControl(toolPanel);
 
             }
@@ -474,7 +501,7 @@
                             unselectAllCtrl.deactivate();
 
                             // Showing panel with extra tools
-                            $('#extraTools').show();
+                            $('#extraTools').removeClass('hide').addClass('singleLineTools');
 
                             // Showing panel with extra layer control
                             $('#extraLayers').show();
@@ -488,7 +515,7 @@
                             highlightCtrl.deactivate();
                             selectCtrl.deactivate();
 
-                            $('#extraTools').hide();
+                            $('#extraTools').addClass('hide').removeClass('singleLineTools');
                             $('#extraLayers').hide();
                             $('#extraActions').hide();
 
@@ -531,17 +558,17 @@
                             // By construction, there is only one WMS layer with this name
                             layerToRefresh[0].redraw(true);
                         }
-                        var img_block = " (no photo)";
+                        var img_block = "";
                         if (data.uploaded_img != "NONE")
                         {
-                            img_block = " <a href='"+data.uploaded_img+"' target=\"_blank\"><img height=30 width=30 src='"+data.uploaded_img+"'/></a>";
+                            img_block = " <a href='"+data.uploaded_img+"' target=\"_blank\" style=\"float:right;\"><img height=30 width=30 src='"+data.uploaded_img+"'/></a>";
                         }
 
                         // Clearing up the form and the selection
                         $('#cancel').click();
                         unselectAllFeatures();
 
-                        $('#formOutput').html("Created observation #"+data.observation_id+img_block).show();
+                        $('#formOutput').html("Just created observation #"+data.observation_id+img_block).show();
                     }
                 };
 
