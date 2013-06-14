@@ -18,7 +18,7 @@ $err_email = "hs.enot@gmail.com";
 try {
 	$p_asset_id = $_REQUEST['field_asset'];
 	$p_cells_id = $_REQUEST['field_selected_cells'];
-	$p_option_radio = $_REQUEST['field_optionsRadios'];
+	$p_option_radio = $_REQUEST['field_options_radios'];
 	$p_email_address = $_REQUEST['field_email_address'];
 	$p_comment = $_REQUEST['field_comment'];
 
@@ -62,45 +62,44 @@ try {
 	$uploaded_img_webpath = "NONE";
 
     // Now processing the uploaded file
-	if ($_FILES["field_file"]["error"] > 0)
+    if (!empty($_FILES['field_file']['name']))
     {
-	    exit('{"success":"false","error":{"code":"'.$_FILES["file"]["error"].'"}');
-    }
-    else
-    {
-		// Moving the file to the uploads directory
-		$upload_path = "../uploads/";
-		$ftyp = $_FILES["field_file"]["type"];
-		if ($ftyp == "image/gif")
-		{$fext = "gif";}
-		elseif (($ftyp == "image/jpeg") || ($ftyp == "image/jpg")|| ($ftyp == "image/pjpeg"))
-		{$fext = "jpg";}
-		elseif (($ftyp == "image/x-png") || ($ftyp == "image/png"))
-		{$fext = "png";}
-		else
-		{exit('{"success":"false","error":{"code":"U","message":"Unknown mime type:'.$ftyp.'"}');}
+		if ($_FILES['field_file']['error'] > 0)
+	    {
+		    exit('{"success":"false","error":{"code":"'.$_FILES["file"]["error"].'"}');
+	    }
+	    else
+	    {
+			// Moving the file to the uploads directory
+			$upload_path = "../uploads/";
+			$ftyp = $_FILES["field_file"]["type"];
+			if ($ftyp == "image/gif")
+			{$fext = "gif";}
+			elseif (($ftyp == "image/jpeg") || ($ftyp == "image/jpg")|| ($ftyp == "image/pjpeg"))
+			{$fext = "jpg";}
+			elseif (($ftyp == "image/x-png") || ($ftyp == "image/png"))
+			{$fext = "png";}
+			else
+			{exit('{"success":"false","error":{"code":"U","message":"Unknown mime type:'.$ftyp.'"}');}
 
-		// Building the filename out of the observation number and the mime type
-		$target_path = $upload_path . $obs_id .".". $fext;
+			// Building the filename out of the observation number and the mime type
+			$target_path = $upload_path . $obs_id .".". $fext;
 
-		if(move_uploaded_file($_FILES['field_file']['tmp_name'], $target_path)) {
-			//echo "The file ".  basename( $_FILES['uploadedfile']['name'])." has been uploaded";
-		} else {
-			exit('{"success":"false","error":{"code":"U","message":"The file upload to '.$target_path.' did not complete succeessfully"}}');
-		}
-
-		// Image web path:
-		$uploaded_img_webpath = "http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/".$target_path;
-		// Inserting the observation
-		$sql = "UPDATE observation SET photo='".$uploaded_img_webpath."' WHERE id=".$obs_id;
-		$sql = sanitizeSQL($sql);
-		//echo $sql;
-	    $recordSet = $pgconn->prepare($sql);
-	    $recordSet->execute();
-
-    }
-
-	echo '{"success":"true","observation_id":"'.$obs_id.'","uploaded_img":"'.$uploaded_img_webpath.'"}';
+			if(move_uploaded_file($_FILES['field_file']['tmp_name'], $target_path)) {
+				// Image web path:
+				$uploaded_img_webpath = "http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/".$target_path;
+				// Inserting the observation
+				$sql = "UPDATE observation SET photo='".$uploaded_img_webpath."' WHERE id=".$obs_id;
+				$sql = sanitizeSQL($sql);
+				//echo $sql;
+			    $recordSet = $pgconn->prepare($sql);
+			    $recordSet->execute();
+		    } else {
+				exit('{"success":"false","error":{"code":"U","message":"The file upload to '.$target_path.' did not complete succeessfully"}}');
+			}
+	    }
+	}
+	exit('{"success":"true","observation_id":"'.$obs_id.'","uploaded_img":"'.$uploaded_img_webpath.'"}');
 }
 catch (Exception $e) {
 	trigger_error("Caught Exception: " . $e->getMessage(), E_USER_ERROR);
