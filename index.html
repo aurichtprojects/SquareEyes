@@ -369,11 +369,10 @@
                 vmap.addControl(selectCtrl);
 
                 unselectAllFeatures = function() {
-                    highlightCtrl.unselectAll();
+                    // The order of unselection counts: select controls before highlight control
                     selectCtrl.unselectAll();
                     selectByPolygon.unselectAll();
-                    // It should not be that difficult to clear highlights/selects but this works for now
-                    wfs_layer.refresh({force:true});
+                    highlightCtrl.unselectAll();
                     reportSelection();
                     selectByPolygon.deactivate();
                 };
