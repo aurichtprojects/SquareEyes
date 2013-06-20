@@ -75,7 +75,7 @@
             bottom: 10px;
             top:auto !important;
             left: 290px;
-            width: 700px;
+            width: 850px;
         }
 
         .modal-header {
@@ -102,7 +102,7 @@
         }
 
         #extraLayers {
-          margin:10px 0 20px;
+          margin:10px 0 5px;
           text-align:left;
         }
 
@@ -197,6 +197,9 @@
                 </div>
                 <!-- Message / info -->
                 <div id="extraLayers" class="hide"></div>
+                <div id="extraLegend" class="hide" style="margin: 0 0 15px;">
+                    <img src="/geoserver/wms?request=GetLegendGraphic&format=image%2Fpng&width=15&height=15&layer=CURRENT_OCCURENCE&transparent=true">
+                </div>
                 <!-- Action / form -->
                 <div id="extraActions" class="hide">
                     <form id="mod_form" action="ws/ws_create_observation.php" method="POST">
@@ -611,6 +614,7 @@
 
                             // Showing panel with extra layer control
                             $('#extraLayers').show();
+                            $('#extraLegend').show();
 
                         }
                         else
@@ -624,6 +628,7 @@
                             $('#extraTools').addClass('hide').removeClass('singleLineTools');
                             $('#extraLayers').hide();
                             $('#extraActions').hide();
+                            $('#extraLegend').hide();
 
                         }
 
