@@ -48,7 +48,9 @@ ALTER SEQUENCE asset_gid_seq OWNED BY asset.id;
 CREATE TABLE baseline_occurence (
     cell_id smallint,
     status_id smallint,
-    asset_id smallint
+    asset_id smallint,
+    source_id smallint,
+    year_id smallint
 );
 
 
@@ -149,6 +151,16 @@ CREATE TABLE r_role (
 
 
 --
+-- Name: r_source; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE r_source (
+    id smallint NOT NULL,
+    label character varying
+);
+
+
+--
 -- Name: r_status; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -175,6 +187,16 @@ CREATE SEQUENCE r_status_gid_seq
 --
 
 ALTER SEQUENCE r_status_gid_seq OWNED BY r_status.id;
+
+
+--
+-- Name: r_year; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE r_year (
+    id smallint NOT NULL,
+    label character varying
+);
 
 
 --
@@ -276,6 +298,22 @@ ALTER TABLE ONLY observation
 
 
 --
+-- Name: r_source_pk; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY r_source
+    ADD CONSTRAINT r_source_pk PRIMARY KEY (id);
+
+
+--
+-- Name: r_year_pk; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY r_year
+    ADD CONSTRAINT r_year_pk PRIMARY KEY (id);
+
+
+--
 -- Name: role_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -312,8 +350,6 @@ ALTER TABLE ONLY "user"
 --
 
 CREATE INDEX bo_asset_id_idx ON baseline_occurence USING btree (asset_id);
-
-ALTER TABLE baseline_occurence CLUSTER ON bo_asset_id_idx;
 
 
 --
