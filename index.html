@@ -75,12 +75,17 @@
             bottom: 10px;
             top:auto !important;
             left: 290px;
-            width: 650px;
+            width: 700px;
         }
 
         .modal-header {
             padding: 0;
         }
+
+        .modal-header .close {
+            margin-right: 5px;
+        }
+
         .modal-body {
             padding: 5px;
         }
@@ -477,6 +482,23 @@
                 $('#closeModal').click(function(){
                     $('#myHistoryModal').hide();
                 });
+
+                /*
+                $("table tr").live("hover",function(e){
+                        // We need to highlight the feature whose ID is:
+                        var cell_id = $('#'+e.currentTarget.id)[0].childNodes[0].innerHTML;
+                        for (f in highlightCtrl.layer.features)
+                        {
+                            if (highlightCtrl.layer.features[f].fid == 'CELL.'+cell_id)
+                            {
+                                //highlightCtrl.unhighlight();
+                                highlightCtrl.highlight(highlightCtrl.layer.features[f]);
+                                break;
+                            }
+                        }
+
+                });
+                */
 
                 historyClick = function(){
                     var selCell = getSelectedCellsArray().join(",");
