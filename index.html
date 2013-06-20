@@ -461,6 +461,13 @@
                             vmap.removeLayer(layerToRemove[0]);
                         }
 
+                        var layerToRemove2 = vmap.getLayersByName("Baseline occurence");
+                        if (layerToRemove2.length)
+                        {
+                            // By construction, there is only one WMS layer with this name
+                            vmap.removeLayer(layerToRemove2[0]);
+                        }
+
                         // If the selection was changed to another weed (i.e. not cleared)
                         if (e.added)
                         {
