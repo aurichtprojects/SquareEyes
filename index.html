@@ -35,7 +35,7 @@
         }
 
         .fluid-fixed {
-            margin-right: 280px;
+            margin-right: 310px;
             margin-left:auto !important;
             display: block;
         }
@@ -44,7 +44,7 @@
             position: relative;
             top: 0;
             left:auto;
-            width: 250px;
+            width: 280px;
         }
 
         .right {
@@ -69,6 +69,24 @@
 
         .pointer {
             cursor: pointer;
+        }
+
+        .modal {
+            bottom: 10px;
+            top:auto !important;
+            left: 290px;
+            width: 650px;
+        }
+
+        .modal-header {
+            padding: 0;
+        }
+        .modal-body {
+            padding: 5px;
+        }
+
+        .table {
+            margin-bottom: 0;
         }
 
         #extraTools div {
@@ -165,21 +183,21 @@
             <!-- the sidebar needs to be defined before the map fluid content! -->
             <div id="sidebar" class="well right sidebar-nav scrollable">
                 <!-- Drop down -->
-                <input type="hidden" id="e1" style="width:235px"/>
+                <input type="hidden" id="e1" style="width:265px"/>
                 <!-- Controls and additional layers -->
                 <div id="baseTools">
-                    <i id="loginTool" class="icon-user singleLineTools pointer" style="margin:15px 50px 15px 5px;"></i>
+                    <i id="loginTool" class="icon-user singleLineTools pointer" style="margin:15px 65px 15px 5px;"></i>
                     <div id="extraTools" class="hide pointer"></div>
-                    <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:20px;"></div>
+                    <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:30px;"></div>
                 </div>
                 <!-- Message / info -->
                 <div id="extraLayers" class="hide"></div>
                 <!-- Action / form -->
                 <div id="extraActions" class="hide">
                     <form id="mod_form" action="ws/ws_create_observation.php" method="POST">
-                        <legend>Report / Moderate</legend>
                         <div id="extraInfo" class="hide"></div>
                         <!-- Message / info -->
+                        <legend>Report / Moderate</legend>
                         <label class="radio">
                             <input type="radio" name="field_options_radios" id="optionsRadios1" value="1">Reject
                         </label>
@@ -214,6 +232,14 @@
             <div class="well fluid-fixed">
                 <!--Body content-->
                 <div id="map" class="smallmap"></div>
+                <div id="myHistoryModal" class="modal hide">
+                    <div class="modal-header">
+                        <button id="closeModal" type="button" class="close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                       <p id="historyDiv" style="margin: 0;"></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -231,7 +257,7 @@
     <script src="select2/select2.js"></script>
     <script>
 
-        var vmap, wfs_layer,assets_array,gridMaxRes=400,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl,unselectAllFeatures;
+        var vmap, wfs_layer,assets_array,gridMaxRes=400,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl,unselectAllFeatures,historyClick,getSelectedCellsArray;
 
         // Window resize function
         var rsz = function(){
@@ -239,7 +265,7 @@
             var w = $(window).width();
             // Setting height to window height minus the header and footer sizes
             $("#map").css('height',h - 42);
-            $("#map").css('width', w - 322);
+            $("#map").css('width', w - 352);
             // Setting the height of the sidebar as well, as it's getting an unwelcome scrollbar lateral shift
             $("#sidebar").css('height',h - 40)
         };
@@ -353,7 +379,7 @@
                         {
                             $('#extraInfo').show();
                             $('#extraActions').show();
-                            $('#extraInfo').html("For the "+(nsf==1?"":nsf+" ")+"selected cell"+(nsf==1?"":"s")+":");
+                            $('#extraInfo').html("For the "+(nsf==1?"":nsf+" ")+"selected cell"+(nsf==1?"":"s")+", show <a href='#' onClick='historyClick()'>history</a> or:");
                             unselectAllCtrl.activate();
                             $('#formOutput').html("").hide();
                         }
@@ -446,6 +472,55 @@
                 //      ]
                 // }
                 assets_array = data.rows;
+
+                $('#myHistoryModal').modal({backdrop:false,show:false});
+                $('#closeModal').click(function(){
+                    $('#myHistoryModal').hide();
+                });
+
+                historyClick = function(){
+                    var selCell = getSelectedCellsArray().join(",");
+                    var selAsset = $("#e1")[0].value;
+
+                    $.getJSON('ws/ws_get_history.php', { asset: selAsset, selected_cells: selCell })
+                    .done(function(data) {
+                            // An array of flat objects, ready to be plugged into an HTML table
+                            var json_res = data.rows;
+
+                            var html_str = "<table class='table table-hover table-striped table-bordered table-condensed'><thead><tr><th>Cell</th><th>Source type</th><th>Status</th><th>Stakeholder</th><th>Time</th></tr></thead>";
+                            html_str += "<tbody>";
+                            for (r in json_res)
+                            {
+                                html_str += "<tr>";
+                                html_str += "<td>"+json_res[r].cell_id+"</td>";
+                                html_str += "<td>"+json_res[r].source_type+"</td>";
+                                html_str += "<td>"+json_res[r].status+"</td>";
+                                html_str += "<td>"+json_res[r].stakeholder+"</td>";
+                                html_str += "<td>"+json_res[r].time_mark+"</td>";
+                                html_str += "</tr>";
+                            }
+                            html_str += "</tbody></table>";
+
+                            // Showing a history div and populating it with the result
+                            $('#historyDiv').html(html_str);
+                            $('#myHistoryModal').show();
+
+                    });
+                };
+
+                getSelectedCellsArray = function(){
+                    var cell_arr=[];
+                    for (f in wfs_layer.selectedFeatures)
+                    {
+                        if (wfs_layer.selectedFeatures[f].fid)
+                        {
+                            // Pushing elements in the array
+                            cell_arr.push(wfs_layer.selectedFeatures[f].fid.split('.')[1])
+                        }
+                    }
+                    return cell_arr;
+                }
+
 
                 $("#e1").select2({
                     data: assets_array,
@@ -548,15 +623,7 @@
                 // Currently selected asset
                 $('form input[name="field_asset"]').val($("#e1")[0].value);
                 // Currently selected cells
-                var cell_arr = [];
-                for (f in wfs_layer.selectedFeatures)
-                {
-                    if (wfs_layer.selectedFeatures[f].fid)
-                    {
-                        // Pushing elements in the array
-                        cell_arr.push(wfs_layer.selectedFeatures[f].fid.split('.')[1])
-                    }
-                }
+                var cell_arr = getSelectedCellsArray();
                 $('form input[name="field_selected_cells"]').val(cell_arr);
 
                 var processJson = function(data){
