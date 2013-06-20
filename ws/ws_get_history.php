@@ -25,7 +25,7 @@ select cell_id,source_type,status,stakeholder,time_mark from
 oc.cell_id,
 cast('Observation' as text) as source_type,
 (select rs.label from r_status rs where rs.id=o.status_id) as status,
-cast('Crowd contribution' as text) as stakeholder,
+cast('User contribution' as text)||' (by '||(select name from "user" u where o.user_id=u.id)||')' as stakeholder,
 to_char(o.ts, 'YYYY/MM/DD HH12:MI:SS') as time_mark,
 cast(extract(epoch from o.ts) as integer) as ord
 from observation o,observation_coverage oc
