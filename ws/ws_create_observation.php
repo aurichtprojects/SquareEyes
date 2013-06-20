@@ -57,7 +57,13 @@ try {
     $recordSet2 = $pgconn->prepare($sql2);
     $recordSet2->execute();
 
-	header("Content-Type: application/json");
+    // Due to a bug in IE8/9, we can't set the response header to application/json like we should 
+    //header("Content-Type: application/json");
+    // but text/html is a valid replacement
+    // Should be investigated further
+    // Reference: http://blog.degree.no/2012/09/jquery-json-ie8ie9-treats-response-as-downloadable-file/  
+    header("Content-Type: text/html");
+
 	$uploaded_img_webpath = "NONE";
 
     // Now processing the uploaded file
