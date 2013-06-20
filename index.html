@@ -198,7 +198,7 @@
                 <!-- Message / info -->
                 <div id="extraLayers" class="hide"></div>
                 <div id="extraLegend" class="hide" style="margin: 0 0 15px;">
-                    <img src="/geoserver/wms?request=GetLegendGraphic&format=image%2Fpng&width=15&height=15&layer=CURRENT_OCCURENCE&transparent=true">
+                    <img id="legendImg"/>
                 </div>
                 <!-- Action / form -->
                 <div id="extraActions" class="hide">
@@ -266,6 +266,9 @@
     <script>
 
         var vmap, wfs_layer,assets_array,gridMaxRes=400,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl,unselectAllFeatures,historyClick,getSelectedCellsArray;
+        var geoserver_root = "/geoserver";
+        var current_occurence_label = "Current occurence";
+        var baseline_occurence_label = "Baseline occurence";
 
         // Window resize function
         var rsz = function(){
@@ -340,7 +343,7 @@
                     strategies: [new OpenLayers.Strategy.BBOX()],
                     protocol: new OpenLayers.Protocol.WFS({
                         version: "1.1.0",
-                        url: "/geoserver/wfs",
+                        url: geoserver_root+"/wfs",
                         featureType: "CELL",
                         featureNS: "http://www.pozi.com/project1",
                         srsName: "EPSG:900913"
@@ -467,6 +470,8 @@
 
                 vmap.addControl(toolPanel);
 
+                $('#legendImg').attr('src',geoserver_root+"/wms?request=GetLegendGraphic&format=image%2Fpng&width=15&height=15&layer=CURRENT_OCCURENCE&transparent=true");
+
             }
 
             initMap();
@@ -485,23 +490,6 @@
                 $('#closeModal').click(function(){
                     $('#myHistoryModal').hide();
                 });
-
-                /*
-                $("table tr").live("hover",function(e){
-                        // We need to highlight the feature whose ID is:
-                        var cell_id = $('#'+e.currentTarget.id)[0].childNodes[0].innerHTML;
-                        for (f in highlightCtrl.layer.features)
-                        {
-                            if (highlightCtrl.layer.features[f].fid == 'CELL.'+cell_id)
-                            {
-                                //highlightCtrl.unhighlight();
-                                highlightCtrl.highlight(highlightCtrl.layer.features[f]);
-                                break;
-                            }
-                        }
-
-                });
-                */
 
                 historyClick = function(){
                     var selCell = getSelectedCellsArray().join(",");
@@ -554,14 +542,14 @@
                 }).on("change", function(e) {
 
                         // Removing the previous layers
-                        var layerToRemove = vmap.getLayersByName("Current occurence");
+                        var layerToRemove = vmap.getLayersByName(current_occurence_label);
                         if (layerToRemove.length)
                         {
                             // By construction, there is only one WMS layer with this name
                             vmap.removeLayer(layerToRemove[0]);
                         }
 
-                        var layerToRemove2 = vmap.getLayersByName("Baseline occurence");
+                        var layerToRemove2 = vmap.getLayersByName(baseline_occurence_label);
                         if (layerToRemove2.length)
                         {
                             // By construction, there is only one WMS layer with this name
@@ -572,8 +560,8 @@
                         if (e.added)
                         {
                             // Adding the new ones
-                            var co_wms = new OpenLayers.Layer.WMS("Current occurence",
-                                "/geoserver/PROJECT1/wms?",
+                            var co_wms = new OpenLayers.Layer.WMS(current_occurence_label,
+                                geoserver_root+"/PROJECT1/wms?",
                                 {
                                     "transparent":"true",
                                     "layers":"CURRENT_OCCURENCE",
@@ -586,8 +574,8 @@
                                 }
                             );
 
-                           var bo_wms = new OpenLayers.Layer.WMS("Baseline occurence",
-                                "/geoserver/PROJECT1/wms?",
+                           var bo_wms = new OpenLayers.Layer.WMS(baseline_occurence_label,
+                                geoserver_root+"/PROJECT1/wms?",
                                 {
                                     "transparent":"true",
                                     "layers":"BASELINE_OCCURENCE",
@@ -655,7 +643,7 @@
 
                 var processJson = function(data){
                     if (data.success){
-                        var layerToRefresh = vmap.getLayersByName("Current occurence");
+                        var layerToRefresh = vmap.getLayersByName(current_occurence_label);
                         if (layerToRefresh.length)
                         {
                             // By construction, there is only one WMS layer with this name
