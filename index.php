@@ -2,6 +2,7 @@
     session_start();
 
     $display_error_login = false;
+    $logged_in_this_page = false;
 
     require_once('ws/inc/error.inc.php');
     require_once('ws/inc/database.inc.php');
@@ -45,6 +46,7 @@
         else
         {
             // We are already logged in, the login icon will logout
+            $logged_in_this_page = true;
         }
 
     }
@@ -299,7 +301,7 @@
                 <div id="baseTools">
                     <?php
                         $icon_class = "icon-user";
-                        if (isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true){
+                        if ($logged_in_this_page){
                             $icon_class .= " icon-white";
                         };
                         echo "<i id=\"loginTool\" class=\"".$icon_class." singleLineTools pointer\" style=\"margin:15px 65px 15px 5px;\"></i>";
