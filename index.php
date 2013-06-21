@@ -142,7 +142,7 @@
         }
 
         #myLoginModal.modal {
-            width: 300px;
+            width: 320px;
         }
 
         .modal-header {
@@ -244,10 +244,6 @@
           background-image: url("bootstrap/img/glyphicons-halflings.png");
         }
 
-        #loginDiv {
-
-        }
-
     </style>
     <!--<link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">-->
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -257,110 +253,105 @@
 
   </head>
 
-  <body>
-    <?php
-        $login_add_class = "hide";
-        if ($display_error_login){
-            $login_add_class = "";
-        }
-        echo "<div id=\"myLoginModal\" class=\"modal ".$login_add_class."\">";
-    ?>
-        <div class="modal-header">
-            <button id="closeLoginModal" type="button" class="close">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="content">
-              <div class="row">
-                <div class="login-form">
-                  <h2>Login</h2>
-                <?php
-                    $login_add_class = "hide";
-                    if ($display_error_login){
-                        $login_add_class = "";
-                    }
-                    echo "<div class=\"alert alert-error ".$login_add_class."\">Incorrect username or password</div>";
-                ?>
-                  <form id="login_form" action="<?php $PHP_SELF; ?>" method="post">
-                    <fieldset>
-                      <div class="clearfix">
-                        <input type="text" name="login_username" placeholder="Username" style="height:15px;"/>
-                      </div>
-                      <div class="clearfix">
-                        <input type="password" name="login_password" placeholder="Password" style="height:15px;"/>
-                      </div>
-                      <button id="login-submit" class="btn btn-primary" style="float: right;">Sign in</button>
-                    </fieldset>
-                  </form>
-                </div>
-              </div>
+    <body>
+        <?php
+            $login_add_class = "hide";
+            if ($display_error_login){$login_add_class = "";}
+            echo "<div id=\"myLoginModal\" class=\"modal ".$login_add_class."\">";
+        ?>
+            <div class="modal-header">
+                <button id="closeLoginModal" type="button" class="close">&times;</button>
             </div>
-        </div>
-    </div> <!-- /container -->
-
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <!-- the sidebar needs to be defined before the map fluid content! -->
-            <div id="sidebar" class="well right sidebar-nav scrollable">
-                <!-- Drop down -->
-                <input type="hidden" id="e1" style="width:265px"/>
-                <!-- Controls and additional layers -->
-                <div id="baseTools">
-                    <?php
-                        $icon_class = "icon-user";
-                        if ($logged_in){
-                            $icon_class .= " icon-white";
-                        };
-                        echo "<i id=\"loginTool\" class=\"".$icon_class." singleLineTools pointer\" style=\"margin:15px 65px 15px 5px;\"></i>";
-                    ?>
-                    <div id="extraTools" class="hide pointer"></div>
-                    <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:30px;"></div>
-                </div>
-                <!-- Message / info -->
-                <div id="extraLayers" class="hide"></div>
-                <div id="extraLegend" class="hide" style="margin: 0 0 15px;">
-                    <img id="legendImg"/>
-                </div>
-                <!-- Action / form -->
-                <div class="<?php if (!$logged_in) {echo "hide";} ?>">
-                <div id="extraActions" class="hide">
-                    <form id="mod_form" action="ws/ws_create_observation.php" method="POST">
-                        <div id="extraInfo" class="hide"></div>
-                        <!-- Message / info -->
-                        <legend>
-                            <?php if ($logged_in_role == 'moderator') {echo "Moderate";} else {echo "Report";} ?>
-                        </legend>
-                        <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
-                            <input type="radio" name="field_options_radios" id="optionsRadios1" value="1">Reject
-                        </label>
-                        <label class="radio <?php if ($logged_in_role == 'moderator') {echo "hide";} ?>">
-                            <input type="radio" name="field_options_radios" id="optionsRadios2" value="2">Report presence
-                        </label>
-                        <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
-                            <input type="radio" name="field_options_radios" id="optionsRadios3" value="3">Approve
-                        </label>
-                        <input type="text" name="field_email_address" placeholder="Your email address">
-                        <textarea rows="2" name="field_comment" placeholder="Your comments"></textarea>
-                        <div class="fileupload fileupload-new" data-provides="fileupload">
-                            <div class="fileupload-new thumbnail" style="width: 100px; height: 100px;">
-                                <img src="http://www.placehold.it/100x100/EFEFEF/AAAAAA&text=no+image" />
-                            </div>
-                            <div class="fileupload-preview fileupload-exists thumbnail" style="width: 100px; height: 100px;"></div>
-                            <span class="btn btn-file">
-                                <span class="fileupload-new">Attach photo</span>
-                                <span class="fileupload-exists">Change photo</span>
-                                <input name="field_file" type="file" />
-                            </span>
-                            <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove photo</a>
+            <div class="modal-body">
+                <div class="content">
+                    <div class="row">
+                        <div class="login-form">
+                            <h2>Login</h2>
+                            <?php
+                                $login_add_class = "hide";
+                                if ($display_error_login){$login_add_class = "";}
+                                echo "<div class=\"alert alert-error ".$login_add_class."\">Incorrect username or password</div>";
+                            ?>
+                            <form id="login_form" action="<?php $PHP_SELF; ?>" method="post">
+                                <fieldset>
+                                    <div class="clearfix">
+                                        <input type="text" name="login_username" placeholder="Username" style="height:15px;"/>
+                                    </div>
+                                    <div class="clearfix">
+                                        <input type="password" name="login_password" placeholder="Password" style="height:15px;"/>
+                                    </div>
+                                    <button id="login-submit" class="btn btn-primary" style="float: right;">Sign in</button>
+                                </fieldset>
+                            </form>
                         </div>
-                        <input type="hidden" name="field_asset" value="">
-                        <input type="hidden" name="field_selected_cells" value="">
-                        <button type="button" id="save" class="btn btn-primary right">Save</button>
-                        <button type="button" id="cancel" class="btn btn-danger">Cancel</button>
-                    </form>
+                    </div>
                 </div>
-                <div id="formOutput" class="well hide"></div>
             </div>
+        </div> <!-- /modal -->
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <!-- the sidebar needs to be defined before the map fluid content! -->
+                <div id="sidebar" class="well right sidebar-nav scrollable">
+                    <!-- Drop down -->
+                    <input type="hidden" id="e1" style="width:265px"/>
+                    <!-- Controls and additional layers -->
+                    <div id="baseTools">
+                        <?php
+                            $icon_class = "icon-user";
+                            if ($logged_in){
+                                $icon_class .= " icon-white";
+                            };
+                            echo "<i id=\"loginTool\" class=\"".$icon_class." singleLineTools pointer\" style=\"margin:15px 65px 15px 5px;\"></i>";
+                        ?>
+                        <div id="extraTools" class="hide pointer"></div>
+                        <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:30px;"></div>
+                    </div>
+                    <!-- Message / info -->
+                    <div id="extraLayers" class="hide"></div>
+                    <div id="extraLegend" class="hide" style="margin: 0 0 15px;">
+                        <img id="legendImg"/>
+                    </div>
+                    <!-- Action / form -->
+                    <div class="<?php if (!$logged_in) {echo "hide";} ?>">
+                    <div id="extraActions" class="hide">
+                        <form id="mod_form" action="ws/ws_create_observation.php" method="POST">
+                            <div id="extraInfo" class="hide"></div>
+                            <!-- Message / info -->
+                            <legend><?php if ($logged_in_role == 'moderator') {echo "Moderate";} else {echo "Report";} ?></legend>
+                            <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
+                                <input type="radio" name="field_options_radios" id="optionsRadios1" value="1">Reject
+                            </label>
+                            <label class="radio <?php if ($logged_in_role == 'moderator') {echo "hide";} ?>">
+                                <input type="radio" name="field_options_radios" id="optionsRadios2" value="2">Report presence
+                            </label>
+                            <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
+                                <input type="radio" name="field_options_radios" id="optionsRadios3" value="3">Approve
+                            </label>
+                            <input type="text" name="field_email_address" placeholder="Your email address">
+                            <textarea rows="2" name="field_comment" placeholder="Your comments"></textarea>
+                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                <div class="fileupload-new thumbnail" style="width: 100px; height: 100px;">
+                                    <img src="http://www.placehold.it/100x100/EFEFEF/AAAAAA&text=no+image" />
+                                </div>
+                                <div class="fileupload-preview fileupload-exists thumbnail" style="width: 100px; height: 100px;"></div>
+                                <span class="btn btn-file">
+                                    <span class="fileupload-new">Attach photo</span>
+                                    <span class="fileupload-exists">Change photo</span>
+                                    <input name="field_file" type="file" />
+                                </span>
+                                <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove photo</a>
+                            </div>
+                            <input type="hidden" name="field_asset" value="">
+                            <input type="hidden" name="field_selected_cells" value="">
+                            <button type="button" id="save" class="btn btn-primary right">Save</button>
+                            <button type="button" id="cancel" class="btn btn-danger">Cancel</button>
+                        </form>
+                    </div>
+                    <div id="formOutput" class="well hide"></div>
+                </div>
             </div>
+
             <div class="well fluid-fixed">
                 <!--Body content-->
                 <div id="map" class="smallmap"></div>
@@ -374,315 +365,321 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="openlayers/OpenLayers.js"></script>
-    <!-- Letting Google host and serve jQuery for us -->
-    <!-- based on http://encosia.com/3-reasons-why-you-should-let-google-host-jquery-for-you/ -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
-    <script src="bootstrap/js/bootstrap.js"></script>
-    <script src="jquery.form.js"></script>
-    <script src="bootstrap/js/bootstrap-fileupload.js"></script>
-    <script src="select2/select2.js"></script>
-    <script>
+        <!-- Le javascript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="openlayers/OpenLayers.js"></script>
+        <!-- Letting Google host and serve jQuery for us -->
+        <!-- based on http://encosia.com/3-reasons-why-you-should-let-google-host-jquery-for-you/ -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+        <script src="bootstrap/js/bootstrap.js"></script>
+        <script src="jquery.form.js"></script>
+        <script src="bootstrap/js/bootstrap-fileupload.js"></script>
+        <script src="select2/select2.js"></script>
+        <script>
+            var vmap, wfs_layer,assets_array,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl,unselectAllFeatures,historyClick,getSelectedCellsArray;
+            var gridMaxRes = 400;
+            var geoserver_root = "/geoserver";
+            var current_occurence_label = "Current occurence";
+            var baseline_occurence_label = "Baseline occurence";
 
-        var vmap, wfs_layer,assets_array,gridMaxRes=400,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl,unselectAllFeatures,historyClick,getSelectedCellsArray;
-        var geoserver_root = "/geoserver";
-        var current_occurence_label = "Current occurence";
-        var baseline_occurence_label = "Baseline occurence";
+            // Window resize function
+            var rsz = function(){
+                var h = $(window).height();
+                var w = $(window).width();
+                // Setting height to window height minus the header and footer sizes
+                $("#map").css('height',h - 42);
+                $("#map").css('width', w - 352);
+                // Setting the height of the sidebar as well, as it's getting an unwelcome scrollbar lateral shift
+                $("#sidebar").css('height',h - 40)
+            };
 
-        // Window resize function
-        var rsz = function(){
-            var h = $(window).height();
-            var w = $(window).width();
-            // Setting height to window height minus the header and footer sizes
-            $("#map").css('height',h - 42);
-            $("#map").css('width', w - 352);
-            // Setting the height of the sidebar as well, as it's getting an unwelcome scrollbar lateral shift
-            $("#sidebar").css('height',h - 40)
-        };
+            // Initial width/height values are required for display of vector layer
+            rsz();
+            $(window).resize(rsz);
 
-        // Initial width/height values are required for display of vector layer
-        rsz();
-        $(window).resize(rsz);
-
-        $(document).ready(function () {
-
-            function initMap(){
-                vmap = new OpenLayers.Map('map',
-                    {
-                        projection: "EPSG:900913",
-                        units: "m",
-                        maxResolution: 156543.0339,
-                        maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
-                        controls:[
-                            new OpenLayers.Control.Navigation(),
-                            new OpenLayers.Control.Zoom(),
-                            new OpenLayers.Control.ScaleLine(),
-                            new OpenLayers.Control.ZoomBox({'keyMask': OpenLayers.Handler.MOD_SHIFT})
-                        ],
-                        numZoomLevels:20,
-                        theme: null
-                    }
-                );
-
-                vmap.addControl(new OpenLayers.Control.LayerSwitcher(
-                    {'div':$('#extraLayers')[0]}
-                ));
-
-                // Rewriting the text for Overlays, based on the OpenLayers control nested structure
-                $('#extraLayers div div.dataLbl').html("<legend>Layers available</legend>");
-
-                osm = new OpenLayers.Layer.OSM("Simple OSM Map","",{'displayInLayerSwitcher':false});
-                vmap.addLayer(osm);
-                vmap.setCenter(
-                    new OpenLayers.LonLat(172, -40).transform(
-                        new OpenLayers.Projection("EPSG:4326"),
-                        vmap.getProjectionObject()
-                    ), 5
-                );
-
-                // Style definition for the grid vector layer
-                var defaultStyle = new OpenLayers.Style({
-                    'strokeColor': 'black',
-                    'strokeOpacity': 0.5,
-                    'strokeWidth': 0.5,
-                    'fillOpacity': 0
-                });
-
-                var selectStyle = new OpenLayers.Style({
-                    'strokeColor': 'blue',
-                    'strokeWidth': 0.5,
-                    'fillColor':'blue',
-                    'fillOpacity': 0.5
-                });
-
-                var sm = new OpenLayers.StyleMap({'default': defaultStyle,'select': selectStyle});
-
-                // Vector layer for the grid of cells
-                wfs_layer = new OpenLayers.Layer.Vector("Grid", {
-                    strategies: [new OpenLayers.Strategy.BBOX()],
-                    protocol: new OpenLayers.Protocol.WFS({
-                        version: "1.1.0",
-                        url: geoserver_root+"/wfs",
-                        featureType: "CELL",
-                        featureNS: "http://www.pozi.com/project1",
-                        srsName: "EPSG:900913"
-                    }),
-                    styleMap: sm,
-                    maxResolution:gridMaxRes,
-                    displayInLayerSwitcher:false
-                    }
-                );
-
-                vmap.addLayer(wfs_layer);
-
-                var report = function(e) {
-                    $('#currentCell').html(e.feature.fid.split(".")[1]);
-                };
-
-                var unreport = function(e) {
-                    $('#currentCell').html("");
-                };
-
-                highlightCtrl = new OpenLayers.Control.SelectFeature(wfs_layer, {
-                    hover: true,
-                    highlightOnly: true,
-                    renderIntent: "temporary",
-                    eventListeners: {
-                        featurehighlighted: report,
-                        featureunhighlighted: unreport
-                    }
-                });
-
-                var reportSelection = function(e) {
-                    if (e)
-                    {
-                        var nsf = e.feature.layer.selectedFeatures.length;
-
-                        // Adjust the number of cell selected if the event is an unhighlight
-                        if (e.type == "featureunhighlighted")
+            $(document).ready(function () {
+                function initMap(){
+                    vmap = new OpenLayers.Map('map',
                         {
-                            nsf = nsf - 1;
+                            projection: "EPSG:900913",
+                            units: "m",
+                            maxResolution: 156543.0339,
+                            maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
+                            controls:[
+                                new OpenLayers.Control.Navigation(),
+                                new OpenLayers.Control.Zoom(),
+                                new OpenLayers.Control.ScaleLine(),
+                                new OpenLayers.Control.ZoomBox({'keyMask': OpenLayers.Handler.MOD_SHIFT})
+                            ],
+                            numZoomLevels:20,
+                            theme: null
                         }
+                    );
 
-                        // Display the number of cells selected
-                        if (nsf>0)
+                    // Layer control definition
+                    vmap.addControl(new OpenLayers.Control.LayerSwitcher(
+                        {'div':$('#extraLayers')[0]}
+                    ));
+                    // Rewriting the text for Overlays, based on the OpenLayers control nested structure
+                    $('#extraLayers div div.dataLbl').html("<legend>Layers available</legend>");
+
+                    osm = new OpenLayers.Layer.OSM("Simple OSM Map","",{'displayInLayerSwitcher':false});
+                    vmap.addLayer(osm);
+                    vmap.setCenter(
+                        new OpenLayers.LonLat(172, -40).transform(
+                            new OpenLayers.Projection("EPSG:4326"),
+                            vmap.getProjectionObject()
+                        ), 5
+                    );
+
+                    // Style definition for the grid vector layer
+                    var defaultStyle = new OpenLayers.Style({
+                        'strokeColor': 'black',
+                        'strokeOpacity': 0.5,
+                        'strokeWidth': 0.5,
+                        'fillOpacity': 0
+                    });
+
+                    var selectStyle = new OpenLayers.Style({
+                        'strokeColor': 'blue',
+                        'strokeWidth': 0.5,
+                        'fillColor':'blue',
+                        'fillOpacity': 0.5
+                    });
+
+                    var sm = new OpenLayers.StyleMap({'default': defaultStyle,'select': selectStyle});
+
+                    // Vector layer for the grid of cells
+                    wfs_layer = new OpenLayers.Layer.Vector("Grid", {
+                        strategies: [new OpenLayers.Strategy.BBOX()],
+                        protocol: new OpenLayers.Protocol.WFS({
+                            version: "1.1.0",
+                            url: geoserver_root+"/wfs",
+                            featureType: "CELL",
+                            featureNS: "http://www.pozi.com/project1",
+                            srsName: "EPSG:900913"
+                        }),
+                        styleMap: sm,
+                        maxResolution:gridMaxRes,
+                        displayInLayerSwitcher:false
+                        }
+                    );
+
+                    vmap.addLayer(wfs_layer);
+
+                    var report = function(e) {
+                        $('#currentCell').html(e.feature.fid.split(".")[1]);
+                    };
+
+                    var unreport = function(e) {
+                        $('#currentCell').html("");
+                    };
+
+                    highlightCtrl = new OpenLayers.Control.SelectFeature(wfs_layer, {
+                        hover: true,
+                        highlightOnly: true,
+                        renderIntent: "temporary",
+                        eventListeners: {
+                            featurehighlighted: report,
+                            featureunhighlighted: unreport
+                        }
+                    });
+
+                    var reportSelection = function(e) {
+                        if (e)
                         {
-                            $('#extraInfo').show();
-                            $('#extraActions').show();
-                            $('#extraInfo').html("For the "+(nsf==1?"":nsf+" ")+"selected cell"+(nsf==1?"":"s")+", show <a href='#' onClick='historyClick()'>history</a> or:");
-                            unselectAllCtrl.activate();
-                            $('#formOutput').html("").hide();
+                            var nsf = e.feature.layer.selectedFeatures.length;
+
+                            // Adjust the number of cell selected if the event is an unhighlight
+                            if (e.type == "featureunhighlighted")
+                            {
+                                nsf = nsf - 1;
+                            }
+
+                            // Display the number of cells selected
+                            if (nsf>0)
+                            {
+                                $('#extraInfo').show();
+                                $('#extraActions').show();
+                                $('#extraInfo').html("For the "+(nsf==1?"":nsf+" ")+"selected cell"+(nsf==1?"":"s")+", show <a href='#' onClick='historyClick()'>history</a> or:");
+                                unselectAllCtrl.activate();
+                                $('#formOutput').html("").hide();
+                            }
+                            else
+                            {
+                                $('#extraInfo').hide();
+                                $('#extraActions').hide();
+                                $('#extraInfo').html("");
+                                unselectAllCtrl.deactivate();
+                                $('#formOutput').html("").hide();
+                            }
+                         }
+                         else
+                         {
+                                $('#extraInfo').hide();
+                                $('#extraActions').hide();
+                                $('#extraInfo').html("");
+                                unselectAllCtrl.deactivate();
+                                $('#formOutput').html("").hide();
+                         }
+                    };
+
+                    selectCtrl = new OpenLayers.Control.SelectFeature(wfs_layer,{
+                        multiple: true,
+                        toggle: true,
+                        eventListeners: {
+                            featurehighlighted:reportSelection,
+                            featureunhighlighted:reportSelection
+                        }
+                    });
+
+                    // Required so that the map can still be dragged and panned even when the user clicks on a cell
+                    // Based on: http://osgeo-org.1560.x6.nabble.com/vector-layer-prevents-map-pan-and-drag-td4567876.html
+                    highlightCtrl.handlers.feature.stopDown = false;
+                    selectCtrl.handlers.feature.stopDown = false;
+
+                    vmap.addControl(highlightCtrl);
+                    vmap.addControl(selectCtrl);
+
+                    unselectAllFeatures = function() {
+                        // The order of unselection counts: select controls before highlight control
+                        selectCtrl.unselectAll();
+                        selectByPolygon.unselectAll();
+                        highlightCtrl.unselectAll();
+                        reportSelection();
+                        selectByPolygon.deactivate();
+                    };
+
+                    unselectAllCtrl = new OpenLayers.Control.Button({
+                        displayClass: "unselectBtn", trigger: unselectAllFeatures
+                    });
+
+                    selectByPolygon = new OpenLayers.Control.SelectFeature(wfs_layer,{
+                        id:'selectByPolyId',
+                        displayClass:"selectByPoly",
+                        multiple:true, // means that the selections from this tool are additive to other selections,
+                        toggle:true,
+                        box:true,
+                        eventListeners: {
+                            featurehighlighted:reportSelection,
+                            featureunhighlighted:reportSelection
+                        },
+                        type: OpenLayers.Control.TYPE_TOGGLE // the tool icon can be pushed and pushed back
+                    });
+
+                    downloadCtrl = new OpenLayers.Control.Button({
+                        displayClass: "download", trigger: function(){alert("Download not implemented");}
+                    });
+
+                    var container = document.getElementById("extraTools");
+                    toolPanel = new OpenLayers.Control.Panel({div:container});
+                    toolPanel.addControls([unselectAllCtrl,selectByPolygon,downloadCtrl]);
+
+                    // Login tool
+                    $('#loginTool').click(function(){
+                        // If the class icon-white is present (i.e. we are logged in), then clicking the control triggers logout
+                        if ($(this).hasClass('icon-white'))
+                        {
+                            //alert('You will be logged out now');
+                            window.location = 'logout.php';
                         }
                         else
                         {
-                            $('#extraInfo').hide();
-                            $('#extraActions').hide();
-                            $('#extraInfo').html("");
-                            unselectAllCtrl.deactivate();
-                            $('#formOutput').html("").hide();
+                            // We display the modal to enter username/password
+                            $('#myLoginModal').show();
                         }
-                     }
-                     else
-                     {
-                            $('#extraInfo').hide();
-                            $('#extraActions').hide();
-                            $('#extraInfo').html("");
-                            unselectAllCtrl.deactivate();
-                            $('#formOutput').html("").hide();
-                     }
-                };
+                    })
 
-                selectCtrl = new OpenLayers.Control.SelectFeature(wfs_layer,{
-                    multiple: true,
-                    toggle: true,
-                    eventListeners: {
-                        featurehighlighted:reportSelection,
-                        featureunhighlighted:reportSelection
-                    }
-                });
+                    // Adding the tool panel to the map
+                    vmap.addControl(toolPanel);
 
-                // Required so that the map can still be dragged and panned even when the user clicks on a cell
-                // Based on: http://osgeo-org.1560.x6.nabble.com/vector-layer-prevents-map-pan-and-drag-td4567876.html
-                highlightCtrl.handlers.feature.stopDown = false;
-                selectCtrl.handlers.feature.stopDown = false;
+                    // Setting the legend image source
+                    $('#legendImg').attr('src',geoserver_root+"/wms?request=GetLegendGraphic&format=image%2Fpng&width=15&height=15&layer=CURRENT_OCCURENCE&transparent=true");
 
-                vmap.addControl(highlightCtrl);
-                vmap.addControl(selectCtrl);
-
-                unselectAllFeatures = function() {
-                    // The order of unselection counts: select controls before highlight control
-                    selectCtrl.unselectAll();
-                    selectByPolygon.unselectAll();
-                    highlightCtrl.unselectAll();
-                    reportSelection();
-                    selectByPolygon.deactivate();
-                };
-
-                unselectAllCtrl = new OpenLayers.Control.Button({
-                    displayClass: "unselectBtn", trigger: unselectAllFeatures
-                });
-
-                selectByPolygon = new OpenLayers.Control.SelectFeature(wfs_layer,{
-                    id:'selectByPolyId',
-                    displayClass:"selectByPoly",
-                    multiple:true, // means that the selections from this tool are additive to other selections,
-                    toggle:true,
-                    box:true,
-                    eventListeners: {
-                        featurehighlighted:reportSelection,
-                        featureunhighlighted:reportSelection
-                    },
-                    type: OpenLayers.Control.TYPE_TOGGLE // the tool icon can be pushed and pushed back
-                });
-
-                downloadCtrl = new OpenLayers.Control.Button({
-                    displayClass: "download", trigger: function(){alert("Download not implemented");}
-                });
-
-                var container = document.getElementById("extraTools");
-                toolPanel = new OpenLayers.Control.Panel({div:container});
-                toolPanel.addControls([unselectAllCtrl,selectByPolygon,downloadCtrl]);
-
-                $('#loginTool').click(function(){
-                    if ($(this).hasClass('icon-white'))
-                    {
-                        //alert('You will be logged out now');
-                        window.location = 'logout.php';
-                    }
-                    else
-                    {
-                        $('#myLoginModal').show();
-                    }
-                })
-
-                vmap.addControl(toolPanel);
-
-                $('#legendImg').attr('src',geoserver_root+"/wms?request=GetLegendGraphic&format=image%2Fpng&width=15&height=15&layer=CURRENT_OCCURENCE&transparent=true");
-
-            }
-
-            initMap();
-
-            $.getJSON('ws/ws_asset_list.php', function(data) {
-                // Asset JSON must have a "rows" attribute that contains an array of id,text pair values 
-                // {"total_rows":"184","rows":
-                //      [
-                //       {"id":"1","text":"Acer pseudoplatanus"},
-                //       {"id":"2","text":"Agapanthus praecox"}, ...
-                //      ]
-                // }
-                assets_array = data.rows;
-
-                $('#myHistoryModal').modal({backdrop:false,show:false});
-                $('#closeModal').click(function(){
-                    $('#myHistoryModal').hide();
-                });
-
-                $('#myLoginModal').modal({backdrop:true,show:false});
-                $('#closeLoginModal').click(function(){
-                    $('#myLoginModal').hide();
-                });
-
-                $('#login-submit').click(function(){
-                    // Submitting the form with the username and password to the same page
-                    $('#login_form').submit();
-                });
-
-                historyClick = function(){
-                    var selCell = getSelectedCellsArray().join(",");
-                    var selAsset = $("#e1")[0].value;
-
-                    $.getJSON('ws/ws_get_history.php', { asset: selAsset, selected_cells: selCell })
-                    .done(function(data) {
-                            // An array of flat objects, ready to be plugged into an HTML table
-                            var json_res = data.rows;
-
-                            var html_str = "<table class='table table-hover table-striped table-bordered table-condensed'><thead><tr><th>Cell</th><th>Source type</th><th>Status</th><th>Stakeholder</th><th>Time</th></tr></thead>";
-                            html_str += "<tbody>";
-                            for (r in json_res)
-                            {
-                                html_str += "<tr>";
-                                html_str += "<td>"+json_res[r].cell_id+"</td>";
-                                html_str += "<td>"+json_res[r].source_type+"</td>";
-                                html_str += "<td>"+json_res[r].status+"</td>";
-                                html_str += "<td>"+json_res[r].stakeholder+"</td>";
-                                html_str += "<td>"+json_res[r].time_mark+"</td>";
-                                html_str += "</tr>";
-                            }
-                            html_str += "</tbody></table>";
-
-                            // Showing a history div and populating it with the result
-                            $('#historyDiv').html(html_str);
-                            $('#myHistoryModal').show();
-
-                    });
-                };
-
-                getSelectedCellsArray = function(){
-                    var cell_arr=[];
-                    for (f in wfs_layer.selectedFeatures)
-                    {
-                        if (wfs_layer.selectedFeatures[f].fid)
-                        {
-                            // Pushing elements in the array
-                            cell_arr.push(wfs_layer.selectedFeatures[f].fid.split('.')[1])
-                        }
-                    }
-                    return cell_arr;
                 }
 
+                initMap();
 
-                $("#e1").select2({
-                    data: assets_array,
-                    placeholder: "Select a weed",
-                    allowClear: true
-                }).on("change", function(e) {
+                $.getJSON('ws/ws_asset_list.php', function(data) {
+                    // Asset JSON must have a "rows" attribute that contains an array of id,text pair values 
+                    // {"total_rows":"184","rows":
+                    //      [
+                    //       {"id":"1","text":"Acer pseudoplatanus"},
+                    //       {"id":"2","text":"Agapanthus praecox"}, ...
+                    //      ]
+                    // }
+                    assets_array = data.rows;
 
+                    // Somehow needed to add a hide function to the history modal close button
+                    $('#myHistoryModal').modal({backdrop:false,show:false});
+                    $('#closeModal').click(function(){
+                        $('#myHistoryModal').hide();
+                    });
+
+                    // Somehow needed to add a hide function to the login modal close button
+                    $('#myLoginModal').modal({backdrop:true,show:false});
+                    $('#closeLoginModal').click(function(){
+                        $('#myLoginModal').hide();
+                    });
+
+                    // Clicking the login form button ... sends the form
+                    $('#login-submit').click(function(){
+                        // Submitting the form with the username and password to the same page
+                        $('#login_form').submit();
+                    });
+
+                    // Gathering information to display in the history table for the selected cells
+                    historyClick = function(){
+                        var selCell = getSelectedCellsArray().join(",");
+                        var selAsset = $("#e1")[0].value;
+
+                        $.getJSON('ws/ws_get_history.php', { asset: selAsset, selected_cells: selCell })
+                        .done(function(data) {
+                                // An array of flat objects, ready to be plugged into an HTML table
+                                var json_res = data.rows;
+
+                                var html_str = "<table class='table table-hover table-striped table-bordered table-condensed'><thead><tr><th>Cell</th><th>Source type</th><th>Status</th><th>Stakeholder</th><th>Time</th></tr></thead>";
+                                html_str += "<tbody>";
+                                for (r in json_res)
+                                {
+                                    html_str += "<tr>";
+                                    html_str += "<td>"+json_res[r].cell_id+"</td>";
+                                    html_str += "<td>"+json_res[r].source_type+"</td>";
+                                    html_str += "<td>"+json_res[r].status+"</td>";
+                                    html_str += "<td>"+json_res[r].stakeholder+"</td>";
+                                    html_str += "<td>"+json_res[r].time_mark+"</td>";
+                                    html_str += "</tr>";
+                                }
+                                html_str += "</tbody></table>";
+
+                                // Showing a history div and populating it with the result
+                                $('#historyDiv').html(html_str);
+                                $('#myHistoryModal').show();
+
+                        });
+                    };
+
+                    getSelectedCellsArray = function(){
+                        var cell_arr=[];
+                        for (f in wfs_layer.selectedFeatures)
+                        {
+                            if (wfs_layer.selectedFeatures[f].fid)
+                            {
+                                // Pushing elements in the array
+                                cell_arr.push(wfs_layer.selectedFeatures[f].fid.split('.')[1])
+                            }
+                        }
+                        return cell_arr;
+                    }
+
+
+                    $("#e1").select2({
+                        data: assets_array,
+                        placeholder: "Select a weed",
+                        allowClear: true
+                    }).on("change", function(e) {
                         // Removing the previous layers
                         var layerToRemove = vmap.getLayersByName(current_occurence_label);
                         if (layerToRemove.length)
@@ -759,65 +756,60 @@
                             $('#extraLayers').hide();
                             $('#extraActions').hide();
                             $('#extraLegend').hide();
-
                         }
-
+                    });
                 });
 
+                // Initialising the file upload component
+                $('.fileupload').fileupload({uploadType:'image'});
+
+                $('#cancel').on('click',function(){
+                    //alert("Clicked");
+                    $('.fileupload').fileupload('reset');
+                    $('#mod_form').each (function(){this.reset();});
+                })
+
+                $('#save').on('click',function(){
+                    // Modifying hidden values before submission:
+                    // Currently selected asset
+                    $('form input[name="field_asset"]').val($("#e1")[0].value);
+                    // Currently selected cells
+                    var cell_arr = getSelectedCellsArray();
+                    $('form input[name="field_selected_cells"]').val(cell_arr);
+
+                    var processJson = function(data){
+                        if (data.success){
+                            var layerToRefresh = vmap.getLayersByName(current_occurence_label);
+                            if (layerToRefresh.length)
+                            {
+                                // By construction, there is only one WMS layer with this name
+                                layerToRefresh[0].redraw(true);
+                            }
+                            var img_block = "";
+                            if (data.uploaded_img != "NONE")
+                            {
+                                img_block = " <a href='"+data.uploaded_img+"' target=\"_blank\" style=\"float:right;\"><img height=30 width=30 src='"+data.uploaded_img+"'/></a>";
+                            }
+
+                            // Clearing up the form and the selection
+                            $('#cancel').click();
+                            unselectAllFeatures();
+
+                            $('#formOutput').html("Just created observation #"+data.observation_id+img_block).show();
+                        }
+                    };
+
+                    // Submitting the form
+                    var mod_form_data = $('#mod_form').ajaxSubmit({
+                        // dataType identifies the expected content type of the server response 
+                        dataType: 'json',
+                        // success identifies the function to invoke when the server response has been received 
+                        success: processJson
+                    });
+
+                    return false; 
+                })
             });
-
-            // Initialising the file upload component
-            $('.fileupload').fileupload({uploadType:'image'});
-
-            $('#cancel').on('click',function(){
-                //alert("Clicked");
-                $('.fileupload').fileupload('reset');
-                $('#mod_form').each (function(){this.reset();});
-            })
-
-            $('#save').on('click',function(){
-                // Modifying hidden values before submission:
-                // Currently selected asset
-                $('form input[name="field_asset"]').val($("#e1")[0].value);
-                // Currently selected cells
-                var cell_arr = getSelectedCellsArray();
-                $('form input[name="field_selected_cells"]').val(cell_arr);
-
-                var processJson = function(data){
-                    if (data.success){
-                        var layerToRefresh = vmap.getLayersByName(current_occurence_label);
-                        if (layerToRefresh.length)
-                        {
-                            // By construction, there is only one WMS layer with this name
-                            layerToRefresh[0].redraw(true);
-                        }
-                        var img_block = "";
-                        if (data.uploaded_img != "NONE")
-                        {
-                            img_block = " <a href='"+data.uploaded_img+"' target=\"_blank\" style=\"float:right;\"><img height=30 width=30 src='"+data.uploaded_img+"'/></a>";
-                        }
-
-                        // Clearing up the form and the selection
-                        $('#cancel').click();
-                        unselectAllFeatures();
-
-                        $('#formOutput').html("Just created observation #"+data.observation_id+img_block).show();
-                    }
-                };
-
-                // Submitting the form
-                var mod_form_data = $('#mod_form').ajaxSubmit({
-                    // dataType identifies the expected content type of the server response 
-                    dataType: 'json',
-                    // success identifies the function to invoke when the server response has been received 
-                    success: processJson
-                });
-
-                return false; 
-
-            })
-
-        });
-    </script>
-  </body>
+        </script>
+    </body>
 </html>
