@@ -3,6 +3,7 @@
 
     $display_error_login = false;
     $logged_in = false;
+    $logged_in_user = '';
     $logged_in_role = '';
 
     require_once('ws/inc/error.inc.php');
@@ -20,13 +21,15 @@
                 $recordSet = $pgconn->prepare($sql);
                 $recordSet->execute();
 
-                $_SESSION['logged-in']=false;
-                $_SESSION['logged-in-role']='';
+                $_SESSION['logged-in'] = false;
+                $_SESSION['logged-in-user'] = '';
+                $_SESSION['logged-in-role'] = '';
 
                 while ($row  = $recordSet->fetch())
                 {
-                    $_SESSION['logged-in']=true;
-                    $_SESSION['logged-in-role']=$row[0];
+                    $_SESSION['logged-in'] = true;
+                    $_SESSION['logged-in-user'] = $_POST['login_username'];
+                    $_SESSION['logged-in-role'] = $row[0];
                 }
 
                 if ($_SESSION['logged-in'])
@@ -52,6 +55,7 @@
         {
             // We are already logged in, the login icon will logout
             $logged_in = true;
+            $logged_in_user = $_SESSION['logged-in-user'];
             $logged_in_role = $_SESSION['logged-in-role'];
         }
 
@@ -244,6 +248,15 @@
           background-image: url("bootstrap/img/glyphicons-halflings.png");
         }
 
+        #helloP {
+            display: inline-block;
+            font-size: 10px;
+            line-height: 10px;
+            margin: 0 40px 15px 0;
+            vertical-align: bottom;
+            width: 25px;
+        }
+
     </style>
     <!--<link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">-->
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -299,13 +312,16 @@
                     <div id="baseTools">
                         <?php
                             $icon_class = "icon-user";
+                            $logged_in_user_message = "";
                             if ($logged_in){
                                 $icon_class .= " icon-white";
+                                $logged_in_user_message = "<a href='logout.php'>logout ".$logged_in_user."</a>";
                             };
-                            echo "<i id=\"loginTool\" class=\"".$icon_class." singleLineTools pointer\" style=\"margin:15px 65px 15px 5px;\"></i>";
+                            echo "<i id=\"loginTool\" class=\"".$icon_class." singleLineTools pointer\" style=\"margin:15px 5px 15px 5px;\"></i>";
+                            echo "<p id='helloP'>".$logged_in_user_message."</p>";
                         ?>
                         <div id="extraTools" class="hide pointer"></div>
-                        <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:30px;"></div>
+                        <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:25px;"></div>
                     </div>
                     <!-- Message / info -->
                     <div id="extraLayers" class="hide"></div>
