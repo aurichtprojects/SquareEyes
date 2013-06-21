@@ -345,6 +345,7 @@
                                 <input type="radio" name="field_options_radios" id="optionsRadios3" value="3">Approve
                             </label>
                             <input type="text" name="field_email_address" placeholder="Your email address">
+                            <!--
                             <textarea rows="2" name="field_comment" placeholder="Your comments"></textarea>
                             <div class="fileupload fileupload-new" data-provides="fileupload">
                                 <div class="fileupload-new thumbnail" style="width: 100px; height: 100px;">
@@ -358,6 +359,7 @@
                                 </span>
                                 <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove photo</a>
                             </div>
+                            -->
                             <input type="hidden" name="field_asset" value="">
                             <input type="hidden" name="field_selected_cells" value="">
                             <input type="hidden" name="field_logged_in_user" value="<?php echo $logged_in_user; ?>">
