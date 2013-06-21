@@ -321,6 +321,7 @@
                     <img id="legendImg"/>
                 </div>
                 <!-- Action / form -->
+                <div class="<?php if (!$logged_in) {echo "hide";} ?>">
                 <div id="extraActions" class="hide">
                     <form id="mod_form" action="ws/ws_create_observation.php" method="POST">
                         <div id="extraInfo" class="hide"></div>
@@ -358,6 +359,7 @@
                     </form>
                 </div>
                 <div id="formOutput" class="well hide"></div>
+            </div>
             </div>
             <div class="well fluid-fixed">
                 <!--Body content-->
