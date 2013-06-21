@@ -1,7 +1,56 @@
 <?php
+    session_start();
 
-    
+    $display_error_login = false;
 
+    require_once('ws/inc/error.inc.php');
+    require_once('ws/inc/database.inc.php');
+
+    try {
+        // Checking if we already have logged in
+        if (!isset($_SESSION['logged-in']) || $_SESSION['logged-in'] !== true) {
+            if (isset($_POST['login_username']) && isset($_POST['login_password']))
+            {
+                // Establishing connection to database to check that the username and password submitted are valid
+                $pgconn = pgConnection();
+                $sql = "select 1 from \"user\" where name='".$_POST['login_username']."' and password='".$_POST['login_password']."'";
+                //echo $sql;
+                $recordSet = $pgconn->prepare($sql);
+                $recordSet->execute();
+
+                $_SESSION['logged-in']=false;
+                while ($row  = $recordSet->fetch())
+                {
+                    $_SESSION['logged-in']=true;
+                }
+
+                if ($_SESSION['logged-in'])
+                {
+                    // Heading to the same page
+                    header('Location: index.php');
+                    exit;
+                }
+                else
+                {
+                    // Do something to the form so that it shows the same login window, but an error message 
+                    $display_error_login = true;
+                }
+
+            }
+            else
+            {
+                // The login icon will open the login form
+            }
+        }
+        else
+        {
+            // We are already logged in, the login icon will logout
+        }
+
+    }
+    catch (Exception $e) {
+        trigger_error("Caught Exception: " . $e->getMessage(), E_USER_ERROR);
+    }
 ?>
 
 <!DOCTYPE html>
@@ -201,8 +250,13 @@
   </head>
 
   <body>
-
-    <div id="myLoginModal" class="modal hide">
+    <?php
+        $login_add_class = "hide";
+        if ($display_error_login){
+            $login_add_class = "";
+        }
+        echo "<div id=\"myLoginModal\" class=\"modal ".$login_add_class."\">";
+    ?>
         <div class="modal-header">
             <button id="closeLoginModal" type="button" class="close">&times;</button>
         </div>
@@ -211,15 +265,22 @@
               <div class="row">
                 <div class="login-form">
                   <h2>Login</h2>
-                  <form action="">
+                <?php
+                    $login_add_class = "hide";
+                    if ($display_error_login){
+                        $login_add_class = "";
+                    }
+                    echo "<div class=\"alert alert-error ".$login_add_class."\">Incorrect username or password.</div>";
+                ?>
+                  <form id="login_form" action="<?php $PHP_SELF; ?>" method="post">
                     <fieldset>
                       <div class="clearfix">
-                        <input type="text" placeholder="Username" style="height:15px;">
+                        <input type="text" name="login_username" placeholder="Username" style="height:15px;">
                       </div>
                       <div class="clearfix">
-                        <input type="password" placeholder="Password" style="height:15px;">
+                        <input type="password" name="login_password" placeholder="Password" style="height:15px;">
                       </div>
-                      <button class="btn btn-primary" style="float: right;" type="submit">Sign in</button>
+                      <button id="login-submit" class="btn btn-primary" style="float: right;">Sign in</button>
                     </fieldset>
                   </form>
                 </div>
@@ -236,8 +297,13 @@
                 <input type="hidden" id="e1" style="width:265px"/>
                 <!-- Controls and additional layers -->
                 <div id="baseTools">
-                    <a href="logout.php">X</a>
-                    <i id="loginTool" class="icon-user singleLineTools pointer" style="margin:15px 65px 15px 5px;"></i>
+                    <?php
+                        $icon_class = "icon-user";
+                        if (isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true){
+                            $icon_class .= " icon-white";
+                        };
+                        echo "<i id=\"loginTool\" class=\"".$icon_class." singleLineTools pointer\" style=\"margin:15px 65px 15px 5px;\"></i>";
+                    ?>
                     <div id="extraTools" class="hide pointer"></div>
                     <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:30px;"></div>
                 </div>
@@ -511,7 +577,15 @@
                 toolPanel.addControls([unselectAllCtrl,selectByPolygon,downloadCtrl]);
 
                 $('#loginTool').click(function(){
-                    $('#myLoginModal').show();
+                    if ($(this).hasClass('icon-white'))
+                    {
+                        //alert('You will be logged out now');
+                        window.location = 'logout.php';
+                    }
+                    else
+                    {
+                        $('#myLoginModal').show();
+                    }
                 })
 
                 vmap.addControl(toolPanel);
@@ -540,6 +614,11 @@
                 $('#myLoginModal').modal({backdrop:true,show:false});
                 $('#closeLoginModal').click(function(){
                     $('#myLoginModal').hide();
+                });
+
+                $('#login-submit').click(function(){
+                    // Submitting the form with the username and password to the same page
+                    $('#login_form').submit();
                 });
 
                 historyClick = function(){
