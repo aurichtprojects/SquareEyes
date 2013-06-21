@@ -71,15 +71,20 @@
             cursor: pointer;
         }
 
-        .modal {
+        #myHistoryModal.modal {
             bottom: 10px;
             top:auto !important;
             left: 290px;
             width: 850px;
         }
 
+        #myLoginModal.modal {
+            width: 300px;
+        }
+
         .modal-header {
             padding: 0;
+            border-bottom:none !important;
         }
 
         .modal-header .close {
@@ -92,6 +97,10 @@
 
         .table {
             margin-bottom: 0;
+        }
+
+        .row {
+            margin-left: 20px;
         }
 
         #extraTools div {
@@ -172,6 +181,10 @@
           background-image: url("bootstrap/img/glyphicons-halflings.png");
         }
 
+        #loginDiv {
+
+        }
+
     </style>
     <!--<link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">-->
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -182,6 +195,32 @@
   </head>
 
   <body>
+
+    <div id="myLoginModal" class="modal hide">
+        <div class="modal-header">
+            <button id="closeLoginModal" type="button" class="close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="content">
+              <div class="row">
+                <div class="login-form">
+                  <h2>Login</h2>
+                  <form action="">
+                    <fieldset>
+                      <div class="clearfix">
+                        <input type="text" placeholder="Username" style="height:15px;">
+                      </div>
+                      <div class="clearfix">
+                        <input type="password" placeholder="Password" style="height:15px;">
+                      </div>
+                      <button class="btn btn-primary" style="float: right;" type="submit">Sign in</button>
+                    </fieldset>
+                  </form>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div> <!-- /container -->
 
     <div class="container-fluid">
         <div class="row-fluid">
@@ -465,7 +504,7 @@
                 toolPanel.addControls([unselectAllCtrl,selectByPolygon,downloadCtrl]);
 
                 $('#loginTool').click(function(){
-                    alert("Login not implemented");
+                    $('#myLoginModal').show();
                 })
 
                 vmap.addControl(toolPanel);
@@ -489,6 +528,11 @@
                 $('#myHistoryModal').modal({backdrop:false,show:false});
                 $('#closeModal').click(function(){
                     $('#myHistoryModal').hide();
+                });
+
+                $('#myLoginModal').modal({backdrop:true,show:false});
+                $('#closeLoginModal').click(function(){
+                    $('#myLoginModal').hide();
                 });
 
                 historyClick = function(){
