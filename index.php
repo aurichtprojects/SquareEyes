@@ -3,6 +3,7 @@
 
     $display_error_login = false;
     $logged_in_this_page = false;
+    $logged_in_role = '';
 
     require_once('ws/inc/error.inc.php');
     require_once('ws/inc/database.inc.php');
@@ -14,15 +15,18 @@
             {
                 // Establishing connection to database to check that the username and password submitted are valid
                 $pgconn = pgConnection();
-                $sql = "select 1 from \"user\" where name='".$_POST['login_username']."' and password='".$_POST['login_password']."'";
+                $sql = "select (select lower(r.label) from r_role r where r.id=role_id) from \"user\" where name='".$_POST['login_username']."' and password='".$_POST['login_password']."'";
                 //echo $sql;
                 $recordSet = $pgconn->prepare($sql);
                 $recordSet->execute();
 
                 $_SESSION['logged-in']=false;
+                $_SESSION['logged-in-role']='';
+
                 while ($row  = $recordSet->fetch())
                 {
                     $_SESSION['logged-in']=true;
+                    $_SESSION['logged-in-role']=$row[0];
                 }
 
                 if ($_SESSION['logged-in'])
@@ -40,6 +44,7 @@
             }
             else
             {
+                // We are logged out and have not submitted any request to login
                 // The login icon will open the login form
             }
         }
@@ -47,6 +52,7 @@
         {
             // We are already logged in, the login icon will logout
             $logged_in_this_page = true;
+            $logged_in_role = $_SESSION['logged-in-role'];
         }
 
     }
