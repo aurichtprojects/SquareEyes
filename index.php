@@ -272,15 +272,15 @@
                     if ($display_error_login){
                         $login_add_class = "";
                     }
-                    echo "<div class=\"alert alert-error ".$login_add_class."\">Incorrect username or password.</div>";
+                    echo "<div class=\"alert alert-error ".$login_add_class."\">Incorrect username or password</div>";
                 ?>
                   <form id="login_form" action="<?php $PHP_SELF; ?>" method="post">
                     <fieldset>
                       <div class="clearfix">
-                        <input type="text" name="login_username" placeholder="Username" style="height:15px;">
+                        <input type="text" name="login_username" placeholder="Username" style="height:15px;"/>
                       </div>
                       <div class="clearfix">
-                        <input type="password" name="login_password" placeholder="Password" style="height:15px;">
+                        <input type="password" name="login_password" placeholder="Password" style="height:15px;"/>
                       </div>
                       <button id="login-submit" class="btn btn-primary" style="float: right;">Sign in</button>
                     </fieldset>
