@@ -2,7 +2,7 @@
     session_start();
 
     $display_error_login = false;
-    $logged_in_this_page = false;
+    $logged_in = false;
     $logged_in_role = '';
 
     require_once('ws/inc/error.inc.php');
@@ -51,7 +51,7 @@
         else
         {
             // We are already logged in, the login icon will logout
-            $logged_in_this_page = true;
+            $logged_in = true;
             $logged_in_role = $_SESSION['logged-in-role'];
         }
 
@@ -307,7 +307,7 @@
                 <div id="baseTools">
                     <?php
                         $icon_class = "icon-user";
-                        if ($logged_in_this_page){
+                        if ($logged_in){
                             $icon_class .= " icon-white";
                         };
                         echo "<i id=\"loginTool\" class=\"".$icon_class." singleLineTools pointer\" style=\"margin:15px 65px 15px 5px;\"></i>";
@@ -325,14 +325,16 @@
                     <form id="mod_form" action="ws/ws_create_observation.php" method="POST">
                         <div id="extraInfo" class="hide"></div>
                         <!-- Message / info -->
-                        <legend>Report / Moderate</legend>
-                        <label class="radio">
+                        <legend>
+                            <?php if ($logged_in_role == 'moderator') {echo "Moderate";} else {echo "Report";} ?>
+                        </legend>
+                        <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
                             <input type="radio" name="field_options_radios" id="optionsRadios1" value="1">Reject
                         </label>
-                        <label class="radio">
+                        <label class="radio <?php if ($logged_in_role == 'moderator') {echo "hide";} ?>">
                             <input type="radio" name="field_options_radios" id="optionsRadios2" value="2">Report presence
                         </label>
-                        <label class="radio">
+                        <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
                             <input type="radio" name="field_options_radios" id="optionsRadios3" value="3">Approve
                         </label>
                         <input type="text" name="field_email_address" placeholder="Your email address">
