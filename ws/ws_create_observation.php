@@ -19,6 +19,7 @@ try {
 	$p_asset_id = $_REQUEST['field_asset'];
 	$p_cells_id = $_REQUEST['field_selected_cells'];
 	$p_option_radio = $_REQUEST['field_options_radios'];
+	$p_logged_in_username = $_REQUEST['field_logged_in_user'];
 	$p_email_address = sanitizeTextParameter($_REQUEST['field_email_address']);
 	$p_comment = sanitizeTextParameter($_REQUEST['field_comment']);
 }
@@ -32,7 +33,7 @@ try {
 	$pgconn = pgConnection();
 
 	// Inserting the observation
-	$sql = "INSERT INTO observation(asset_id, status_id, user_id,email_address,comments) VALUES (".$p_asset_id.",".$p_option_radio.",1,'".$p_email_address."','".$p_comment."');";
+	$sql = "INSERT INTO observation(asset_id, status_id, user_id,email_address,comments) VALUES (".$p_asset_id.",".$p_option_radio.",(SELECT u.id FROM \"user\" u WHERE u.name='".$p_logged_in_username."'),'".$p_email_address."','".$p_comment."');";
 	$sql = sanitizeSQL($sql);
 	//echo $sql;
     $recordSet = $pgconn->prepare($sql);
