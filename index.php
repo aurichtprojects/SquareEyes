@@ -1,3 +1,9 @@
+<?php
+
+    
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -230,6 +236,7 @@
                 <input type="hidden" id="e1" style="width:265px"/>
                 <!-- Controls and additional layers -->
                 <div id="baseTools">
+                    <a href="logout.php">X</a>
                     <i id="loginTool" class="icon-user singleLineTools pointer" style="margin:15px 65px 15px 5px;"></i>
                     <div id="extraTools" class="hide pointer"></div>
                     <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:30px;"></div>
