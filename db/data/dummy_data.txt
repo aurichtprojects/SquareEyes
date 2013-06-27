@@ -57,3 +57,11 @@ order by a.code;
 CREATE INDEX co_asset_idx ON current_occurence USING btree (asset_code);
 
 cluster current_occurence using co_asset_idx;
+
+
+----------------------------------------------------------
+
+GeoJSON minifying:
+- use 4326
+- remove all decimals after the 5th:
+\.\([[:digit:]]\{5\}\)[[:digit:]]* => \.\1
