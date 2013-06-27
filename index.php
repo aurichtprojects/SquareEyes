@@ -465,7 +465,7 @@
                     // Rewriting the text for Overlays, based on the OpenLayers control nested structure
                     $('#extraLayers div div.dataLbl').html("<legend>Layers available</legend>");
 
-                    // Adding a 3rd button in between the zoom +/-
+                    // Adding a zoom to full extent button between the zoom +/-
                     $('.olControlZoomIn').after("<a id='olControlZoomToMaxExtent' class='olControlZoomToMaxExtent olButton' href='#zoomToMaxExtent'>&nbsp;</a>");
                     $('#olControlZoomToMaxExtent').click(function(){
                         vmap.moveTo(initialMapCenter,initialZoomLevel);
