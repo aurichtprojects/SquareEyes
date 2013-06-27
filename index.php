@@ -363,6 +363,7 @@
                             <input type="hidden" name="field_asset" value="">
                             <input type="hidden" name="field_selected_cells" value="">
                             <input type="hidden" name="field_logged_in_user" value="<?php echo $logged_in_user; ?>">
+                            <br/>
                             <button type="button" id="save" class="btn btn-primary right">Save</button>
                             <button type="button" id="cancel" class="btn btn-danger">Cancel</button>
                         </form>
@@ -396,6 +397,7 @@
         <script src="jquery.form.js"></script>
         <script src="bootstrap/js/bootstrap-fileupload.js"></script>
         <script src="select2/select2.js"></script>
+        <script src="jquery-placeholder/jquery.placeholder.min.js"></script>
         <script>
             var vmap, wfs_layer,assets_array,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl,unselectAllFeatures,historyClick,getSelectedCellsArray;
             var gridMaxRes = 400;
@@ -649,6 +651,9 @@
                         $('#login_form').submit();
                     });
 
+                    // Fixing placeholder issues in IE
+                    $('input, textarea').placeholder();
+
                     // Gathering information to display in the history table for the selected cells
                     historyClick = function(){
                         var selCell = getSelectedCellsArray().join(",");
@@ -786,6 +791,7 @@
                     //alert("Clicked");
                     $('.fileupload').fileupload('reset');
                     $('#mod_form').each (function(){this.reset();});
+                    $('input, textarea').val('');
                 })
 
                 $('#save').on('click',function(){
@@ -807,7 +813,7 @@
                             var img_block = "";
                             if (data.uploaded_img != "NONE")
                             {
-                                img_block = " <a href='"+data.uploaded_img+"' target=\"_blank\" style=\"float:right;\"><img height=30 width=30 src='"+data.uploaded_img+"'/></a>";
+                                img_block = " <a href='"+data.uploaded_img+"' target=\"_blank\" style=\"float:right;\"><img style=\"height:30px;width:30px;\" src='"+data.uploaded_img+"'/></a>";
                             }
 
                             // Clearing up the form and the selection
