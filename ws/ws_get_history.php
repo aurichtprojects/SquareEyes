@@ -3,10 +3,19 @@
  * Returns a list of assets from the database as JSON file
  */
 
+session_start();
+
 # Includes
 require_once("inc/error.inc.php");
 require_once("inc/database.inc.php");
 require_once("inc/security.inc.php");
+
+# Checking if the session has a logged-in user
+if (!$_SESSION['logged-in'])
+{
+	trigger_error("Caught Exception: This web service requires authentication.", E_USER_ERROR);
+	exit;
+}
 
 # Set arguments for error email
 $err_user_name = "Herve";
@@ -52,7 +61,8 @@ ENDSQL;
 
 	if ($format == 'json') {
 		require_once("inc/json.pdo.inc.php");
-		header("Content-Type: application/json");
+		// Required to cater for IE
+		header("Content-Type: text/html");
 		echo rs2json($recordSet);
 	}
 	elseif ($format == "text") {

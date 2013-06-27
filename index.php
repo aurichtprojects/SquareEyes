@@ -364,7 +364,6 @@
                             -->
                             <input type="hidden" name="field_asset" value="">
                             <input type="hidden" name="field_selected_cells" value="">
-                            <input type="hidden" name="field_logged_in_user" value="<?php echo $logged_in_user; ?>">
                             <br/>
                             <button type="button" id="save" class="btn btn-primary right">Save</button>
                             <button type="button" id="cancel" class="btn btn-danger">Cancel</button>

@@ -4,11 +4,20 @@
  *
  */
 
+session_start();
+
 # Includes
 require_once("inc/error.inc.php");
 require_once("inc/database.inc.php");
 require_once("inc/security.inc.php");
 require_once("inc/json.pdo.inc.php");
+
+# Checking if the session has a logged-in user
+if (!$_SESSION['logged-in'])
+{
+	trigger_error("Caught Exception: This web service requires authentication.", E_USER_ERROR);
+	exit;
+}
 
 # Set arguments for error email
 $err_user_name = "Herve";
@@ -19,7 +28,7 @@ try {
 	$p_asset_id = $_REQUEST['field_asset'];
 	$p_cells_id = $_REQUEST['field_selected_cells'];
 	$p_option_radio = $_REQUEST['field_options_radios'];
-	$p_logged_in_username = $_REQUEST['field_logged_in_user'];
+	$p_logged_in_username = $_SESSION['logged-in-user'];
 	$p_email_address = sanitizeTextParameter($_REQUEST['field_email_address']);
 	$p_comment = sanitizeTextParameter($_REQUEST['field_comment']);
 }
