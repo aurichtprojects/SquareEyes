@@ -16,7 +16,7 @@
             {
                 // Establishing connection to database to check that the username and password submitted are valid
                 $pgconn = pgConnection();
-                $sql = "select (select lower(r.label) from r_role r where r.id=role_id) from \"user\" where name='".$_POST['login_username']."' and password='".$_POST['login_password']."'";
+                $sql = "select (select lower(r.label) from r_role r where r.id=role_id) from \"user\" where name='".$_POST['login_username']."' and md5(password)='".$_POST['login_password']."'";
                 //echo $sql;
                 $recordSet = $pgconn->prepare($sql);
                 $recordSet->execute();
@@ -288,7 +288,9 @@
                             <form id="login_form" action="<?php $PHP_SELF; ?>" method="post">
                                 <fieldset>
                                     <div class="clearfix">
-                                        <input type="text" name="login_username" placeholder="Username" style="height:15px;"/>
+                                        <input type="text" name="login_username" placeholder="Username" value="<?php
+                                            if ($display_error_login){echo $_POST['login_username'];}
+                                        ?>" style="height:15px;">
                                     </div>
                                     <div class="clearfix">
                                         <input type="password" name="login_password" placeholder="Password" style="height:15px;"/>
@@ -398,6 +400,7 @@
         <script src="bootstrap/js/bootstrap-fileupload.js"></script>
         <script src="select2/select2.js"></script>
         <script src="jquery-placeholder/jquery.placeholder.min.js"></script>
+        <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
         <script>
             var vmap, wfs_layer,assets_array,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl,unselectAllFeatures,historyClick,getSelectedCellsArray;
             var gridMaxRes = 400;
@@ -647,6 +650,11 @@
 
                     // Clicking the login form button ... sends the form
                     $('#login-submit').click(function(){
+                        $('#closeLoginModal').click();
+                        // Encrypting the password in MD5 before submitting it
+                        var password_before_encrypt = $('form input[name="login_password"]').val();
+                        var password_after_encrypt = CryptoJS.MD5(password_before_encrypt);
+                        $('form input[name="login_password"]').val(password_after_encrypt);
                         // Submitting the form with the username and password to the same page
                         $('#login_form').submit();
                     });
