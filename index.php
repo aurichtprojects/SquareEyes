@@ -500,7 +500,9 @@
                             url: geoserver_root+"/wfs",
                             featureType: "CELL",
                             featureNS: "http://www.pozi.com/project1",
-                            srsName: "EPSG:900913"
+                            srsName: "EPSG:900913",
+                            outputFormat: "json",
+                            readFormat: new OpenLayers.Format.GeoJSON()
                         }),
                         styleMap: sm,
                         maxResolution:gridMaxRes,
