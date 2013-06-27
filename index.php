@@ -206,6 +206,18 @@
             margin: 0;
         }
 
+        div.olControlZoom a.olControlZoomToMaxExtent {
+          width:  22px;
+          height: 22px;
+          background: url("nz.png") no-repeat scroll 0 0 rgba(0, 60, 135, 0.5);
+        }
+
+        div.olControlZoom a.olControlZoomToMaxExtent:hover {
+          width:  22px;
+          height: 22px;
+          background: url("nz.png") no-repeat scroll 0 0 rgba(0, 60, 135, 0.7);
+        }
+
         .unselectBtnItemInactive {
           width:  24px;
           height: 22px;
@@ -406,6 +418,11 @@
             var geoserver_root = "/geoserver";
             var current_occurence_label = "Current occurence";
             var baseline_occurence_label = "Baseline occurence";
+            var initialMapCenter = new OpenLayers.LonLat(172, -40).transform(
+                new OpenLayers.Projection("EPSG:4326"),
+                new OpenLayers.Projection("EPSG:900913")
+            );
+            var initialZoomLevel=5;
 
             // Window resize function
             var rsz = function(){
@@ -448,14 +465,15 @@
                     // Rewriting the text for Overlays, based on the OpenLayers control nested structure
                     $('#extraLayers div div.dataLbl').html("<legend>Layers available</legend>");
 
+                    // Adding a 3rd button in between the zoom +/-
+                    $('.olControlZoomIn').after("<a id='olControlZoomToMaxExtent' class='olControlZoomToMaxExtent olButton' href='#zoomToMaxExtent'>&nbsp;</a>");
+                    $('#olControlZoomToMaxExtent').click(function(){
+                        vmap.moveTo(initialMapCenter,initialZoomLevel);
+                    });
+
                     osm = new OpenLayers.Layer.OSM("Simple OSM Map","",{'displayInLayerSwitcher':false});
                     vmap.addLayer(osm);
-                    vmap.setCenter(
-                        new OpenLayers.LonLat(172, -40).transform(
-                            new OpenLayers.Projection("EPSG:4326"),
-                            vmap.getProjectionObject()
-                        ), 5
-                    );
+                    vmap.setCenter(initialMapCenter, initialZoomLevel);
 
                     // Style definition for the grid vector layer
                     var defaultStyle = new OpenLayers.Style({
