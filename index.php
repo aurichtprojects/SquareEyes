@@ -621,7 +621,24 @@
                     });
 
                     downloadCtrl = new OpenLayers.Control.Button({
-                        displayClass: "download", trigger: function(){alert("Download not implemented");}
+                        displayClass: "download",
+                        trigger: function(){
+                            // Finding the ID and label of the object in the assets_array structure
+                            var selected_asset_idx = $('#e1').val();
+                            var asset_id,asset_name;
+                            for (i=0;i<assets_array.length;i++)
+                            {
+                                if (assets_array[i].id==selected_asset_idx)
+                                {
+                                    asset_id = assets_array[i].id;
+                                    asset_name = assets_array[i].text.toLowerCase().replace(" ","_");
+                                    break;
+                                }
+                            }
+                            // Setting the download link correctly
+                            var url = "http://localhost:8080/geoserver/SQUAREEYES/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SQUAREEYES%3ACURRENT_OCCURENCE&maxfeatures=3500&outputformat=SHAPE-ZIP&VIEWPARAMS=asset_id:"+asset_id+"&format_options=filename:"+asset_name;
+                            window.open(url, 'Download');
+                        }
                     });
 
                     var container = document.getElementById("extraTools");
