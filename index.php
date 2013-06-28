@@ -407,10 +407,15 @@
         <!-- based on http://encosia.com/3-reasons-why-you-should-let-google-host-jquery-for-you/ -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
         <script src="bootstrap/js/bootstrap.js"></script>
+        <!-- A plugin for AJAXifying form serialisation, especially useful for file upload -->
         <script src="jquery.form.js"></script>
+        <!-- A plugin in for a nice file upload field in Bootstrap -->
         <script src="bootstrap/js/bootstrap-fileupload.js"></script>
+        <!-- A fully-fledged plugin for the asset drop-down -->
         <script src="select2/select2.js"></script>
+        <!-- Placeholder plugin required for proper bahaviour of the placeholder attribute in forms in IE -->
         <script src="jquery-placeholder/jquery.placeholder.min.js"></script>
+        <!-- Crypto library used to encode the password in MD5 before POSTing it for login attempt -->
         <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
         <script>
             var vmap, wfs_layer,assets_array,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl,unselectAllFeatures,historyClick,getSelectedCellsArray;
