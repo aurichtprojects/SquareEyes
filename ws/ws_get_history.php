@@ -1,6 +1,6 @@
 <?php
 /**
- * Returns a list of assets from the database as JSON file
+ * Returns the occurence + observation history of a (group of) cell(s)
  */
 
 session_start();
