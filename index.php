@@ -429,6 +429,9 @@
             var current_occurence_layername="CURRENT_OCCURENCE";
             var baseline_occurence_layername="BASELINE_OCCURENCE";
 
+            var cell_history_ws = 'ws/ws_get_history.php';
+            var asset_list_ws = 'ws/ws_asset_list.php';
+
             // Window resize function
             var rsz = function(){
                 var h = $(window).height();
@@ -650,7 +653,7 @@
 
                 initMap();
 
-                $.getJSON('ws/ws_asset_list.php', function(data) {
+                $.getJSON(asset_list_ws, function(data) {
                     // Asset JSON must have a "rows" attribute that contains an array of id,text pair values 
                     // {"total_rows":"184","rows":
                     //      [
@@ -691,7 +694,7 @@
                         var selCell = getSelectedCellsArray().join(",");
                         var selAsset = $("#e1")[0].value;
 
-                        $.getJSON('ws/ws_get_history.php', { asset: selAsset, selected_cells: selCell })
+                        $.getJSON(cell_history_ws, { asset: selAsset, selected_cells: selCell })
                         .done(function(data) {
                                 // An array of flat objects, ready to be plugged into an HTML table
                                 var json_res = data.rows;
