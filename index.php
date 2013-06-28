@@ -843,7 +843,7 @@
                     //alert("Clicked");
                     $('.fileupload').fileupload('reset');
                     $('#mod_form').each (function(){this.reset();});
-                    $('form input, form textarea').val('');
+                    $('form input[type="text"], form textarea').val('');
                 })
 
                 $('#save').on('click',function(){
