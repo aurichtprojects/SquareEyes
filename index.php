@@ -519,7 +519,8 @@
                         }),
                         styleMap: sm,
                         maxResolution:gridMaxRes,
-                        displayInLayerSwitcher:false
+                        displayInLayerSwitcher:false,
+                        transitionEffect:'resize'
                         }
                     );
 
