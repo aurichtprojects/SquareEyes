@@ -636,7 +636,7 @@
                                 }
                             }
                             // Setting the download link correctly
-                            var url = "http://localhost:8080/geoserver/SQUAREEYES/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SQUAREEYES%3ACURRENT_OCCURENCE&maxfeatures=3500&outputformat=SHAPE-ZIP&VIEWPARAMS=asset_id:"+asset_id+"&format_options=filename:"+asset_name;
+                            var url = window.location.protocol+"//"+window.location.host+"/geoserver/"+workspace_name+"/ows?service=WFS&version=1.0.0&request=GetFeature&typeName="+workspace_name+"%3A"+current_occurence_layername+"&maxfeatures=3500&outputformat=SHAPE-ZIP&VIEWPARAMS=asset_id:"+asset_id+"&format_options=filename:"+asset_name;
                             window.open(url, 'Download');
                         }
                     });
