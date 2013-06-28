@@ -15,7 +15,7 @@ $err_email = "herve.senot@groundtruth.com.au";
 # Performs the query and returns XML or JSON
 try {
 	$format = 'json';
-	$sql = sanitizeSQL("SELECT id,label as text FROM asset");
+	$sql = sanitizeSQL("SELECT id,label as text FROM nz.asset");
 	$pgconn = pgConnection();
 
     /*** fetch into an PDOStatement object ***/

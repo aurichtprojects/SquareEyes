@@ -33,22 +33,22 @@ select cell_id,source_type,status,stakeholder,time_mark from
 ((select 
 oc.cell_id,
 cast('Observation' as text) as source_type,
-(select rs.label from r_status rs where rs.id=o.status_id) as status,
-cast('User contribution' as text)||' (by '||(select name from "user" u where o.user_id=u.id)||')' as stakeholder,
+(select rs.label from nz.r_status rs where rs.id=o.status_id) as status,
+cast('User contribution' as text)||' (by '||(select name from nz."user" u where o.user_id=u.id)||')' as stakeholder,
 to_char(o.ts, 'YYYY/MM/DD HH12:MI:SS') as time_mark,
 cast(extract(epoch from o.ts) as integer) as ord
-from observation o,observation_coverage oc
+from nz.observation o,nz.observation_coverage oc
 where o.id=oc.observation_id and o.asset_id=$p_asset_id and oc.cell_id in ($p_cells_list))
 union all
 (
 select 
 bo.cell_id,
 'Baseline data',
-(select rs.label from r_status rs where rs.id=bo.status_id),
-(select rs.label from r_source rs where rs.id=bo.source_id),
-(select ry.label from r_year ry   where ry.id=bo.year_id),
+(select rs.label from nz.r_status rs where rs.id=bo.status_id),
+(select rs.label from nz.r_source rs where rs.id=bo.source_id),
+(select ry.label from nz.r_year ry   where ry.id=bo.year_id),
 0
-from baseline_occurence bo where bo.cell_id in ($p_cells_list) and bo.asset_id=$p_asset_id)) t
+from nz.baseline_occurence bo where bo.cell_id in ($p_cells_list) and bo.asset_id=$p_asset_id)) t
 order by cell_id,ord desc
 ENDSQL;
 

@@ -42,14 +42,14 @@ try {
 	$pgconn = pgConnection();
 
 	// Inserting the observation
-	$sql = "INSERT INTO observation(asset_id, status_id, user_id,email_address,comments) VALUES (".$p_asset_id.",".$p_option_radio.",(SELECT u.id FROM \"user\" u WHERE u.name='".$p_logged_in_username."'),'".$p_email_address."','".$p_comment."');";
+	$sql = "INSERT INTO nz.observation(asset_id, status_id, user_id,email_address,comments) VALUES (".$p_asset_id.",".$p_option_radio.",(SELECT u.id FROM nz.\"user\" u WHERE u.name='".$p_logged_in_username."'),'".$p_email_address."','".$p_comment."');";
 	$sql = sanitizeSQL($sql);
 	//echo $sql;
     $recordSet = $pgconn->prepare($sql);
     $recordSet->execute();
 
     // Getting the observation number just attributed (somehow curr_val does not always work)
-	$sql = "SELECT last_value from observation_gid_seq;";
+	$sql = "SELECT last_value from nz.observation_gid_seq;";
 	$sql = sanitizeSQL($sql);
 	//echo $sql;
     $recordSet = $pgconn->prepare($sql);
@@ -61,7 +61,7 @@ try {
 	}
 
 	// Another block to insert the observation coverage
-	$sql2 = "INSERT INTO observation_coverage(cell_id,observation_id) SELECT c.id,".$obs_id." FROM (SELECT id FROM cell WHERE id IN (".$p_cells_id.")) c;";
+	$sql2 = "INSERT INTO nz.observation_coverage(cell_id,observation_id) SELECT c.id,".$obs_id." FROM (SELECT id FROM nz.cell WHERE id IN (".$p_cells_id.")) c;";
 	$sql2 = sanitizeSQL($sql2);
 	//echo $sql2;
     $recordSet2 = $pgconn->prepare($sql2);
