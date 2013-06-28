@@ -16,7 +16,7 @@
             {
                 // Establishing connection to database to check that the username and password submitted are valid
                 $pgconn = pgConnection();
-                $sql = "select (select lower(r.label) from r_role r where r.id=role_id) from \"user\" where name='".$_POST['login_username']."' and md5(password)='".$_POST['login_password']."'";
+                $sql = "select (select lower(r.label) from nz.r_role r where r.id=role_id) from nz.\"user\" where name='".$_POST['login_username']."' and md5(password)='".$_POST['login_password']."'";
                 //echo $sql;
                 $recordSet = $pgconn->prepare($sql);
                 $recordSet->execute();
@@ -423,6 +423,11 @@
                 new OpenLayers.Projection("EPSG:900913")
             );
             var initialZoomLevel=5;
+            var cellLayerName="CELL";
+            var cellLayerNamespace = "http://www.pozi.com/squareeyes";
+            var workspace_name="SQUAREEYES";
+            var current_occurence_layername="CURRENT_OCCURENCE";
+            var baseline_occurence_layername="BASELINE_OCCURENCE";
 
             // Window resize function
             var rsz = function(){
@@ -498,8 +503,8 @@
                         protocol: new OpenLayers.Protocol.WFS({
                             version: "1.1.0",
                             url: geoserver_root+"/wfs",
-                            featureType: "CELL",
-                            featureNS: "http://www.pozi.com/project1",
+                            featureType: cellLayerName,
+                            featureNS: cellLayerNamespace,
                             srsName: "EPSG:900913",
                             outputFormat: "json",
                             readFormat: new OpenLayers.Format.GeoJSON()
@@ -751,10 +756,10 @@
                         {
                             // Adding the new ones
                             var co_wms = new OpenLayers.Layer.WMS(current_occurence_label,
-                                geoserver_root+"/PROJECT1/wms?",
+                                geoserver_root+"/"+workspace_name+"/wms?",
                                 {
                                     "transparent":"true",
-                                    "layers":"CURRENT_OCCURENCE",
+                                    "layers":current_occurence_layername,
                                     "format":"image/png8",
                                     "viewparams":"asset_id:"+e.added.id
                                 },{
@@ -765,10 +770,10 @@
                             );
 
                            var bo_wms = new OpenLayers.Layer.WMS(baseline_occurence_label,
-                                geoserver_root+"/PROJECT1/wms?",
+                                geoserver_root+"/"+workspace_name+"/wms?",
                                 {
                                     "transparent":"true",
-                                    "layers":"BASELINE_OCCURENCE",
+                                    "layers":baseline_occurence_layername,
                                     "format":"image/png8",
                                     "viewparams":"asset_id:"+e.added.id
                                 },{
