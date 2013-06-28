@@ -621,7 +621,7 @@
                     });
 
                     downloadCtrl = new OpenLayers.Control.Button({
-                        displayClass: "download",
+                        displayClass: "download<?php if ($logged_in_role != 'moderator') {echo " hide";} ?>",
                         trigger: function(){
                             // Finding the ID and label of the object in the assets_array structure
                             var selected_asset_idx = $('#e1').val();
