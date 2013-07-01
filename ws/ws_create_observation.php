@@ -30,7 +30,8 @@ try {
 	$p_option_radio = $_REQUEST['field_options_radios'];
 	$p_logged_in_username = $_SESSION['logged-in-user'];
 	$p_email_address = sanitizeTextParameter($_REQUEST['field_email_address']);
-	$p_comment = sanitizeTextParameter($_REQUEST['field_comment']);
+	$p_comment = isset($_REQUEST['field_comment']) ? $_REQUEST['field_comment'] : '';
+	$p_comment = sanitizeTextParameter($p_comment);
 }
 catch (Exception $e) {
     trigger_error("Caught Exception: " . $e->getMessage(), E_USER_ERROR);
