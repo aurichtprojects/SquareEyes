@@ -797,7 +797,8 @@
                                 },{
                                     isBaseLayer: false,
                                     singleTile:true,
-                                    transitionEffect:'resize'
+                                    transitionEffect:'resize',
+                                    ratio : 1.3
                                 }
                             );
 
@@ -812,7 +813,8 @@
                                     isBaseLayer: false,
                                     singleTile:true,
                                     visibility: false,
-                                    transitionEffect:'resize'
+                                    transitionEffect:'resize',
+                                    ratio : 1.3
                                 }
                             );
 
