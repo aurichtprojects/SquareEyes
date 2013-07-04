@@ -130,7 +130,6 @@
         }
 
         #extraTools {
-          margin-top:10px;
           text-align:center;
         }
 
@@ -171,10 +170,9 @@
         }
 
         #extraTools div {
-          display: inline-block;
-          margin: 5px;
-          background-repeat: no-repeat;
-          border: 1px;
+            background-repeat: no-repeat;
+            border: 1px none;
+            margin: 3px 0;
         }
 
         #extraLayers {
@@ -184,6 +182,7 @@
 
         #extraInfo {
           text-align:left;
+          margin-top: 15px;
         }
 
         #formOutput {
@@ -233,15 +232,15 @@
         }
 
         .selectByPolyItemActive {
-          width:  24px;
-          height: 22px;
+          width:  14px;
+          height: 14px;
           background-position: -240px 0;
           background-image: url("bootstrap/img/glyphicons-halflings-white.png");
         }
 
         .selectByPolyItemInactive {
-          width:  24px;
-          height: 22px;
+          width:  14px;
+          height: 14px;
           background-position: -240px 0;
           background-image: url("bootstrap/img/glyphicons-halflings.png");
         }
@@ -264,7 +263,7 @@
             display: inline-block;
             font-size: 10px;
             line-height: 10px;
-            margin: 0 40px 15px 0;
+            margin: 11px 50px 3px 2px;
             vertical-align: bottom;
             width: 25px;
         }
@@ -274,6 +273,15 @@
             display:block;
             float:right;
             font-size:8px;
+            cursor:pointer;
+        }
+
+        .btn-mini {
+            padding: 1px 4px;
+        }
+
+        .tooltipClass {
+            margin-top: 10px;
         }
 
     </style>
@@ -334,15 +342,25 @@
                         <?php
                             $icon_class = "icon-user";
                             $logged_in_user_message = "";
+                            $tooltip_msg="Login";
                             if ($logged_in){
                                 $icon_class .= " icon-white";
-                                $logged_in_user_message = "<a href='logout.php'>logout ".$logged_in_user."</a>";
+                                $logged_in_user_message = "hello ".$logged_in_user;
+                                $tooltip_msg="Logout";
                             };
-                            echo "<a href='#' class='tooltipClass' data-toggle='tooltip' title='Login'><i id=\"loginTool\" class=\"".$icon_class." singleLineTools pointer\" style=\"margin:15px 5px 15px 5px;\"></i></a>";
+                            echo "<a href='#' class='btn btn-mini tooltipClass' data-toggle='tooltip' title='".$tooltip_msg."'><i id=\"loginTool\" class=\"".$icon_class." singleLineTools\" style=\"margin:2px 0px;\"></i></a>";
                             echo "<p id='helloP'>".$logged_in_user_message."</p>";
                         ?>
-                        <div id="extraTools" class="hide pointer"></div>
-                        <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:25px;"></div>
+                        <div id="extraTools" class="hide">
+                            <?php
+                                if ($logged_in){
+                                    echo '<a id="unselectAllCtrl" class="btn btn-mini tooltipClass disabled" href="#" title="Unselect all"><i class="icon-remove"></i></a>';
+                                    echo '<a id="selectByPolyCtrl" class="btn btn-mini tooltipClass" href="#" title="Select by polygon"><i class="icon-th"></i></a>';
+                                    echo '<a id="downloadCtrl" class="btn btn-mini tooltipClass" href="#" title="Download"><i class="icon-download-alt"></i></a>';
+                                }
+                            ?>
+                        </div>
+                        <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:35px;"></div>
                     </div>
                     <!-- Message / info -->
                     <div id="extraLayers" class="hide"></div>
@@ -598,7 +616,7 @@
                                 $('#extraInfo').show();
                                 $('#extraActions').show();
                                 $('#extraInfo').html("For the "+(nsf==1?"":nsf+" ")+"selected cell"+(nsf==1?"":"s")+", show <a href='#' onClick='historyClick()'>history</a> or:");
-                                unselectAllCtrl.activate();
+                                $('#unselectAllCtrl').removeClass("disabled");
                                 $('#formOutput').html("").hide();
                             }
                             else
@@ -606,7 +624,7 @@
                                 $('#extraInfo').hide();
                                 $('#extraActions').hide();
                                 $('#extraInfo').html("");
-                                unselectAllCtrl.deactivate();
+                                $('#unselectAllCtrl').addClass("disabled");
                                 $('#formOutput').html("").hide();
                             }
                          }
@@ -615,7 +633,7 @@
                                 $('#extraInfo').hide();
                                 $('#extraActions').hide();
                                 $('#extraInfo').html("");
-                                unselectAllCtrl.deactivate();
+                                $('#unselectAllCtrl').addClass("disabled");
                                 $('#formOutput').html("").hide();
                          }
                     };
@@ -637,57 +655,6 @@
                     vmap.addControl(highlightCtrl);
                     vmap.addControl(selectCtrl);
 
-                    unselectAllFeatures = function() {
-                        // The order of unselection counts: select controls before highlight control
-                        selectCtrl.unselectAll();
-                        selectByPolygon.unselectAll();
-                        highlightCtrl.unselectAll();
-                        reportSelection();
-                        selectByPolygon.deactivate();
-                    };
-
-                    unselectAllCtrl = new OpenLayers.Control.Button({
-                        displayClass: "unselectBtn", trigger: unselectAllFeatures
-                    });
-
-                    selectByPolygon = new OpenLayers.Control.SelectFeature(wfs_layer,{
-                        id:'selectByPolyId',
-                        displayClass:"selectByPoly",
-                        multiple:true, // means that the selections from this tool are additive to other selections,
-                        toggle:true,
-                        box:true,
-                        eventListeners: {
-                            featurehighlighted:reportSelection,
-                            featureunhighlighted:reportSelection
-                        },
-                        type: OpenLayers.Control.TYPE_TOGGLE // the tool icon can be pushed and pushed back
-                    });
-
-                    downloadCtrl = new OpenLayers.Control.Button({
-                        displayClass: "download<?php if ($logged_in_role != 'moderator') {echo " hide";} ?>",
-                        trigger: function(){
-                            // Finding the ID and label of the object in the assets_array structure
-                            var selected_asset_idx = $('#e1').val();
-                            var asset_id,asset_name;
-                            for (i=0;i<assets_array.length;i++)
-                            {
-                                if (assets_array[i].id==selected_asset_idx)
-                                {
-                                    asset_id = assets_array[i].id;
-                                    asset_name = assets_array[i].text.toLowerCase().replace(" ","_");
-                                    break;
-                                }
-                            }
-                            // Setting the download link correctly
-                            var url = window.location.protocol+"//"+window.location.host+geoserver_root+"/"+workspace_name+"/ows?service=WFS&version=1.0.0&request=GetFeature&typeName="+workspace_name+"%3A"+current_occurence_layername+"&maxfeatures=3500&outputformat=SHAPE-ZIP&VIEWPARAMS=asset_id:"+asset_id+"&format_options=filename:"+asset_name;
-                            window.open(url, 'Download');
-                        }
-                    });
-
-                    var container = document.getElementById("extraTools");
-                    toolPanel = new OpenLayers.Control.Panel({div:container});
-                    toolPanel.addControls([unselectAllCtrl,selectByPolygon,downloadCtrl]);
-
                     // Login tool
                     $('#loginTool').click(function(){
                         // If the class icon-white is present (i.e. we are logged in), then clicking the control triggers logout
@@ -703,8 +670,56 @@
                         }
                     })
 
+                    unselectAllFeatures = function() {
+                        // The order of unselection counts: select controls before highlight control
+                        selectCtrl.unselectAll();
+                        // TODO selectByPolygon.unselectAll();
+                        highlightCtrl.unselectAll();
+                        reportSelection();
+                        selectByPolygon.deactivate();
+
+                        $('#unselectAllCtrl').blur();
+                    };
+
+                    $('#unselectAllCtrl').click(unselectAllFeatures);
+
+                    selectByPolygon = new OpenLayers.Control.SelectFeature(wfs_layer,{
+                        id:'selectByPolyId',
+                        displayClass:"selectByPoly",
+                        multiple:true, // means that the selections from this tool are additive to other selections,
+                        toggle:true,
+                        box:true,
+                        eventListeners: {
+                            featurehighlighted:reportSelection,
+                            featureunhighlighted:reportSelection
+                        },
+                        type: OpenLayers.Control.TYPE_TOGGLE // the tool icon can be pushed and pushed back
+                    });
+
+                    var container = document.getElementById("selectByPolyCtrl");
+                    toolPanel = new OpenLayers.Control.Panel({div:container});
+                    toolPanel.addControls([selectByPolygon]);                    
                     // Adding the tool panel to the map
                     vmap.addControl(toolPanel);
+
+                    $('#downloadCtrl').click(function(){
+                        // Finding the ID and label of the object in the assets_array structure
+                        var selected_asset_idx = $('#e1').val();
+                        var asset_id,asset_name;
+                        for (i=0;i<assets_array.length;i++)
+                        {
+                            if (assets_array[i].id==selected_asset_idx)
+                            {
+                                asset_id = assets_array[i].id;
+                                asset_name = assets_array[i].text.toLowerCase().replace(" ","_");
+                                break;
+                            }
+                        }
+                        // Setting the download link correctly
+                        var url = window.location.protocol+"//"+window.location.host+geoserver_root+"/"+workspace_name+"/ows?service=WFS&version=1.0.0&request=GetFeature&typeName="+workspace_name+"%3A"+current_occurence_layername+"&maxfeatures=3500&outputformat=SHAPE-ZIP&VIEWPARAMS=asset_id:"+asset_id+"&format_options=filename:"+asset_name;
+                        window.open(url, 'Download');
+                    });
+
                 }
 
                 initMap();
@@ -863,13 +878,12 @@
                             // Adding a legend image
                             $('.dataLayersDiv > br').each(function(idx,e){
                                 var layerNameArr = ["CURRENT_OCCURENCE","BASELINE_OCCURENCE"];
-                                $(e).before("<img id='imgLegendLine"+idx+"' src='"+geoserver_root+"/wms?request=GetLegendGraphic&format=image%2Fpng&width=15&height=15&layer="+layerNameArr[idx]+"&transparent=true&LEGEND_OPTIONS=fontSize:11;fontAntiAliasing:true'/>");
+                                $(e).before("<img id='imgLegendLine"+idx+"' class='hide' src='"+geoserver_root+"/wms?request=GetLegendGraphic&format=image%2Fpng&width=15&height=15&layer="+layerNameArr[idx]+"&transparent=true&LEGEND_OPTIONS=fontSize:11;fontAntiAliasing:true'/>");
                             });
 
                             // Activating the controls
                             highlightCtrl.activate();
                             selectCtrl.activate();
-                            unselectAllCtrl.deactivate();
 
                             // Showing panel with extra tools
                             $('#extraTools').removeClass('hide').addClass('singleLineTools');
