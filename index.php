@@ -269,6 +269,13 @@
             width: 25px;
         }
 
+        a.legendLink {
+            margin:0;
+            display:block;
+            float:right;
+            font-size:8px;
+        }
+
     </style>
     <!--<link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">-->
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -842,7 +849,7 @@
 
                             // Adding a legend link to show / hide the legend
                             $('.labelSpan').each(function(idx,e){
-                                $(e).after("<p id='legendLine"+idx+"' style='cursor:pointer;margin:0;display:block;float:right;font-size:8px;'>legend</p>");
+                                $(e).after("<a id='legendLine"+idx+"' class='legendLink'>legend</a>");
                                 $("#legendLine"+idx).click(function(){
                                     var imgLgd = $('#imgLegendLine'+idx);
                                     if (imgLgd.hasClass('hide')) {imgLgd.removeClass('hide');} else {imgLgd.addClass('hide');}
