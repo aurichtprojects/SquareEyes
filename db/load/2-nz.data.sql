@@ -37,7 +37,7 @@ drop INDEX nz.co_cell_id_idx;
 
 truncate table nz.current_occurence;
 
-insert into nz.current_occurence select cell_id,occ_id,weed_id from nz.nz_db t order by weed_id;
+insert into nz.current_occurence select cell_id,(case status_id when 1 then 1 else 3 end) as occ_id,weed_id from nz.nz_db t order by weed_id;
 
 CREATE INDEX co_asset_id_idx ON nz.current_occurence USING btree (asset_id );
 
