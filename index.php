@@ -494,9 +494,10 @@
                             var layerState = this.layerStates[i];
                             var layer = this.map.layers[i];
                             if ( (layerState.name != layer.name) ||
-                                 (layerState.inRange != layer.inRange) ||
+                                 // The workaround is here .. (for when the grid gets in/out of range)
+                                 // (layerState.inRange != layer.inRange) ||
                                  (layerState.id != layer.id)
-                                 // The workaround is here
+                                 // .. and here (for when overlays are ticked on/off)
                                  // || (layerState.visibility != layer.visibility)
                                  )
                             {
@@ -859,7 +860,7 @@
                             // Adding a legend image
                             $('.dataLayersDiv > br').each(function(idx,e){
                                 var layerNameArr = ["CURRENT_OCCURENCE","BASELINE_OCCURENCE"];
-                                $(e).before("<img id='imgLegendLine"+idx+"' src='"+geoserver_root+"/wms?request=GetLegendGraphic&format=image%2Fpng&width=15&height=15&layer="+layerNameArr[idx]+"&transparent=true'/>");
+                                $(e).before("<img id='imgLegendLine"+idx+"' src='"+geoserver_root+"/wms?request=GetLegendGraphic&format=image%2Fpng&width=15&height=15&layer="+layerNameArr[idx]+"&transparent=true&LEGEND_OPTIONS=fontSize:11;fontAntiAliasing:true'/>");
                             });
 
                             // Activating the controls
