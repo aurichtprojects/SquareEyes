@@ -338,7 +338,7 @@
                                 $icon_class .= " icon-white";
                                 $logged_in_user_message = "<a href='logout.php'>logout ".$logged_in_user."</a>";
                             };
-                            echo "<i id=\"loginTool\" class=\"".$icon_class." singleLineTools pointer\" style=\"margin:15px 5px 15px 5px;\"></i>";
+                            echo "<a href='#' class='tooltipClass' data-toggle='tooltip' title='Login'><i id=\"loginTool\" class=\"".$icon_class." singleLineTools pointer\" style=\"margin:15px 5px 15px 5px;\"></i></a>";
                             echo "<p id='helloP'>".$logged_in_user_message."</p>";
                         ?>
                         <div id="extraTools" class="hide pointer"></div>
@@ -744,6 +744,9 @@
 
                     // Fixing placeholder issues in IE
                     $('input, textarea').placeholder();
+
+                    // Tooltips on ... tools
+                    $('.tooltipClass').tooltip();
 
                     // Gathering information to display in the history table for the selected cells
                     historyClick = function(){
