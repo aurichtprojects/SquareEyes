@@ -339,9 +339,7 @@
                     </div>
                     <!-- Message / info -->
                     <div id="extraLayers" class="hide"></div>
-                    <div id="extraLegend" class="hide" style="margin: 0 0 15px;">
-                        <img id="legendImg"/>
-                    </div>
+
                     <!-- Action / form -->
                     <div class="<?php if (!$logged_in) {echo "hide";} ?>">
                     <div id="extraActions" class="hide">
@@ -476,6 +474,31 @@
                     }
 
                     vmap = new OpenLayers.Map('map', mapOptions);
+
+                    // Overriding the default behaviour of OpenLayers
+                    // because we don't want to rebuild the entire div when a layer visibility changes
+                    OpenLayers.Control.LayerSwitcher.prototype.checkRedraw = function(){
+                        if ( !this.layerStates.length ||
+                             (this.map.layers.length != this.layerStates.length) ) {
+                            return true;
+                        }
+
+                        for (var i = 0, len = this.layerStates.length; i < len; i++) {
+                            var layerState = this.layerStates[i];
+                            var layer = this.map.layers[i];
+                            if ( (layerState.name != layer.name) ||
+                                 (layerState.inRange != layer.inRange) ||
+                                 (layerState.id != layer.id)
+                                 // The workaround is here
+                                 // || (layerState.visibility != layer.visibility)
+                                 )
+                            {
+                                return true;
+                            }
+                        }
+
+                        return false;
+                    };
 
                     // Layer control definition
                     vmap.addControl(new OpenLayers.Control.LayerSwitcher(
@@ -674,10 +697,6 @@
 
                     // Adding the tool panel to the map
                     vmap.addControl(toolPanel);
-
-                    // Setting the legend image source
-                    $('#legendImg').attr('src',geoserver_root+"/wms?request=GetLegendGraphic&format=image%2Fpng&width=15&height=15&layer=CURRENT_OCCURENCE&transparent=true");
-
                 }
 
                 initMap();
@@ -820,6 +839,21 @@
 
                             // Add WMS layer to our map
                             vmap.addLayers([co_wms,bo_wms]);
+
+                            // Adding a legend link to show / hide the legend
+                            $('.labelSpan').each(function(idx,e){
+                                $(e).after("<p id='legendLine"+idx+"' style='cursor:pointer;margin:0;display:block;float:right;font-size:8px;'>legend</p>");
+                                $("#legendLine"+idx).click(function(){
+                                    var imgLgd = $('#imgLegendLine'+idx);
+                                    if (imgLgd.hasClass('hide')) {imgLgd.removeClass('hide');} else {imgLgd.addClass('hide');}
+                                });
+                            });
+
+                            // Adding a legend image
+                            $('.dataLayersDiv > br').each(function(idx,e){
+                                var layerNameArr = ["CURRENT_OCCURENCE","BASELINE_OCCURENCE"];
+                                $(e).before("<img id='imgLegendLine"+idx+"' src='"+geoserver_root+"/wms?request=GetLegendGraphic&format=image%2Fpng&width=15&height=15&layer="+layerNameArr[idx]+"&transparent=true'/>");
+                            });
 
                             // Activating the controls
                             highlightCtrl.activate();
