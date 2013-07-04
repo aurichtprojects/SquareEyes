@@ -423,7 +423,7 @@
             var geoserver_root = "/geoserver";
             var current_occurence_label = "Current occurence";
             var baseline_occurence_label = "Baseline occurence";
-            var initialMapCenter = new OpenLayers.LonLat(172, -40).transform(
+            var initialMapCenter = new OpenLayers.LonLat(172, -42).transform(
                 new OpenLayers.Projection("EPSG:4326"),
                 new OpenLayers.Projection("EPSG:900913")
             );
@@ -454,8 +454,7 @@
 
             $(document).ready(function () {
                 function initMap(){
-                    vmap = new OpenLayers.Map('map',
-                        {
+                    var mapOptions = {
                             projection: "EPSG:900913",
                             units: "m",
                             maxResolution: 156543.0339,
@@ -468,8 +467,15 @@
                             ],
                             numZoomLevels:20,
                             theme: null
-                        }
-                    );
+                    };
+
+                    // disabling the OpenLayers 2.13 smooth zoom, it's just not smooth in IE/Firefox
+                    if (!($.browser.webkit))
+                    {
+                        mapOptions["zoomMethod"]=null;
+                    }
+
+                    vmap = new OpenLayers.Map('map', mapOptions);
 
                     // Layer control definition
                     vmap.addControl(new OpenLayers.Control.LayerSwitcher(
