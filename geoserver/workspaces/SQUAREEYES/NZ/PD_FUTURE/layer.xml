@@ -1,12 +1,12 @@
 <layer>
-  <name>BASELINE_OCCURENCE</name>
-  <id>LayerInfoImpl--2d99e24f:13f88140c59:-7ff6</id>
+  <name>PD_FUTURE</name>
+  <id>LayerInfoImpl-ced24e8:13fbb7bcb80:-7fd9</id>
   <type>VECTOR</type>
   <defaultStyle>
-    <id>StyleInfoImpl--21eeefd7:13fa6fba05a:-7fbb</id>
+    <id>StyleInfoImpl-ced24e8:13fbb7bcb80:-7fd8</id>
   </defaultStyle>
   <resource class="featureType">
-    <id>FeatureTypeInfoImpl--2d99e24f:13f88140c59:-7ff7</id>
+    <id>FeatureTypeInfoImpl-ced24e8:13fbb7bcb80:-7fda</id>
   </resource>
   <enabled>true</enabled>
   <attribution>

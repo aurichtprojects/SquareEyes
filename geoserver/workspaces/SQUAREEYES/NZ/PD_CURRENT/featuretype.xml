@@ -1,13 +1,13 @@
 <featureType>
-  <id>FeatureTypeInfoImpl--2d99e24f:13f88140c59:-7ff7</id>
-  <name>BASELINE_OCCURENCE</name>
-  <nativeName>BASELINE_OCCURENCE</nativeName>
+  <id>FeatureTypeInfoImpl-ced24e8:13fbb7bcb80:-7fdc</id>
+  <name>PD_CURRENT</name>
+  <nativeName>PD_CURRENT</nativeName>
   <namespace>
     <id>NamespaceInfoImpl--2d99e24f:13f88140c59:-7fff</id>
   </namespace>
-  <title>BASELINE_OCCURENCE</title>
+  <title>PD_CURRENT</title>
   <keywords>
-    <string>BASELINE_OCCURENCE</string>
+    <string>PD_CURRENT</string>
     <string>features</string>
   </keywords>
   <nativeCRS>GEOGCS[&quot;WGS 84&quot;, &#xd;
@@ -21,11 +21,10 @@
   AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]]</nativeCRS>
   <srs>EPSG:4326</srs>
   <nativeBoundingBox>
-    <minx>-1.0</minx>
-    <maxx>0.0</maxx>
-    <miny>-1.0</miny>
-    <maxy>0.0</maxy>
-    <crs>EPSG:4326</crs>
+    <minx>165.748794555664</minx>
+    <maxx>179.141540527344</maxx>
+    <miny>-52.6235008239746</miny>
+    <maxy>-34.0668716430664</maxy>
   </nativeBoundingBox>
   <latLonBoundingBox>
     <minx>165.748794555664</minx>
@@ -39,14 +38,14 @@
     <entry key="cachingEnabled">false</entry>
     <entry key="JDBC_VIRTUAL_TABLE">
       <virtualTable>
-        <name>BASELINE_OCCURENCE</name>
-        <sql>select c.id,co.source_id as status,c.the_geom&#xd;
-from nz.baseline_occurence co, nz.cell c&#xd;
-where co.cell_id=c.id and asset_id= cast(CASE WHEN &apos;%asset_id%&apos; = &apos;&apos; THEN NULL ELSE &apos;%asset_id%&apos; END as integer)</sql>
+        <name>PD_CURRENT</name>
+        <sql>select c.id,pd.ei_class_id as status,c.the_geom&#xd;
+from nz.cell_csiro c,nz.potential_distribution_current pd&#xd;
+where c.id=pd.cell_csiro_id and asset_id= cast(CASE WHEN &apos;%asset_id%&apos; = &apos;&apos; THEN NULL ELSE &apos;%asset_id%&apos; END as integer)</sql>
         <keyColumn>id</keyColumn>
         <geometry>
           <name>the_geom</name>
-          <type>Polygon</type>
+          <type>Geometry</type>
           <srid>4326</srid>
         </geometry>
         <parameter>

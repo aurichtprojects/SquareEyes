@@ -10,6 +10,7 @@
   <connectionParameters>
     <entry key="Connection timeout">20</entry>
     <entry key="port">54321</entry>
+    <entry key="passwd">crypt1:oEgAJejKX/mOZ0hhtXROeQ==</entry>
     <entry key="dbtype">postgis</entry>
     <entry key="host">localhost</entry>
     <entry key="validate connections">true</entry>
@@ -20,11 +21,11 @@
     <entry key="schema">nz</entry>
     <entry key="Loose bbox">true</entry>
     <entry key="Expose primary keys">false</entry>
-    <entry key="fetch size">1000</entry>
     <entry key="Max open prepared statements">50</entry>
+    <entry key="fetch size">1000</entry>
     <entry key="preparedStatements">false</entry>
     <entry key="Estimated extends">true</entry>
-    <entry key="user">postgres</entry>
+    <entry key="user">se</entry>
     <entry key="min connections">1</entry>
   </connectionParameters>
   <__default>false</__default>
