@@ -11,13 +11,23 @@ if(!isset($_POST['action'])) {
 }
 
 // Almost spoiled my day 11th May 2013.
+$POST_user='';
+if (isset($_POST['user']))
+{
+  $POST_user=$_POST['user'];
+}
 if(get_magic_quotes_gpc()){
-    $userParams = stripslashes($_POST['user']);
+    $userParams = stripslashes($POST_user);
 } else {
-    $userParams = $_POST['user'];
+    $userParams = $POST_user;
 }
 
-switch($_POST['action']) {
+$POST_action='';
+if (isset($_POST['action']))
+{
+  $POST_action = $_POST['action'];
+}
+switch($POST_action) {
 	case 'get_users':
 		print $users->getUsers();
 	break;

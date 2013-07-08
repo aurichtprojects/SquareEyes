@@ -2,8 +2,8 @@
 
 session_start();
 
-require_once("../../ws/inc/error.inc.php");
-require_once("../../ws/inc/database.inc.php");
+require_once("../ws/inc/error.inc.php");
+require_once("../ws/inc/database.inc.php");
 
 # Checking if the session has a logged-in user
 if (!$_SESSION['logged-in-user'])
