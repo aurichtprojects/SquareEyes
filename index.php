@@ -313,9 +313,9 @@
                         <div id="extraTools" class="hide">
                             <?php
                                 if ($logged_in){
-                                    echo '<a id="unselectAllCtrl" class="btn btn-mini tooltipClass disabled" href="#" title="Unselect all"><i class="icon-remove"></i></a>';
-                                    echo '<a id="selectByPolyCtrl" class="btn btn-mini tooltipClass" href="#" title="Select by polygon"><i class="icon-th"></i></a>';
-                                    echo '<a id="downloadCtrl" class="btn btn-mini tooltipClass" href="#" title="Download"><i class="icon-download-alt"></i></a>';
+                                    echo '<a id="unselectAllCtrl" class="btn btn-mini tooltipClass disabled" href="#" title="Unselect all cells"><i class="icon-remove"></i></a>';
+                                    echo '<a id="selectByPolyCtrl" class="btn btn-mini tooltipClass" href="#" title="Select cells by polygon"><i class="icon-th"></i></a>';
+                                    echo '<a id="downloadCtrl" class="btn btn-mini tooltipClass" href="#" title="Download current occurence"><i class="icon-download-alt"></i></a>';
                                 }
                             ?>
                         </div>
