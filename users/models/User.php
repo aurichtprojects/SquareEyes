@@ -1,7 +1,24 @@
 <?php
 
+session_start();
+
 require_once("../../ws/inc/error.inc.php");
 require_once("../../ws/inc/database.inc.php");
+
+# Checking if the session has a logged-in user
+if (!$_SESSION['logged-in-user'])
+{
+	trigger_error("Caught Exception: This web service requires authentication.", E_USER_ERROR);
+	exit;
+}
+else
+{
+	if($_SESSION['logged-in-user'] != "moderator")
+	{
+		trigger_error("Caught Exception: This web service can only be used by the moderator.", E_USER_ERROR);
+		exit;
+	}
+}
 
 class User {
 	
