@@ -217,53 +217,11 @@
           background: url("nz.png") no-repeat scroll 0 0 rgba(0, 60, 135, 0.7);
         }
 
-        .unselectBtnItemInactive {
-          width:  24px;
-          height: 22px;
-          background-position: -312px 0;
-          background-image: url("bootstrap/img/glyphicons-halflings-white.png");
-        }
-
-        .unselectBtnItemActive {
-          width:  24px;
-          height: 22px;
-          background-position: -312px 0;
-          background-image: url("bootstrap/img/glyphicons-halflings.png");
-        }
-
-        .selectByPolyItemActive {
-          width:  14px;
-          height: 14px;
-          background-position: -240px 0;
-          background-image: url("bootstrap/img/glyphicons-halflings-white.png");
-        }
-
-        .selectByPolyItemInactive {
-          width:  14px;
-          height: 14px;
-          background-position: -240px 0;
-          background-image: url("bootstrap/img/glyphicons-halflings.png");
-        }
-
-        .downloadItemActive {
-          width:  24px;
-          height: 22px;
-          background-position: -96px -24px;
-          background-image: url("bootstrap/img/glyphicons-halflings-white.png");
-        }
-
-        .downloadItemInactive {
-          width:  24px;
-          height: 22px;
-          background-position: -96px -24px;
-          background-image: url("bootstrap/img/glyphicons-halflings.png");
-        }
-
         #helloP {
             display: inline-block;
             font-size: 10px;
             line-height: 10px;
-            margin: 11px 50px 3px 2px;
+            margin: 11px 40px 3px 2px;
             vertical-align: bottom;
             width: 25px;
         }
@@ -278,6 +236,7 @@
 
         .btn-mini {
             padding: 1px 4px;
+            margin-right:5px;
         }
 
         .tooltipClass {
@@ -673,7 +632,6 @@
                     unselectAllFeatures = function() {
                         // The order of unselection counts: select controls before highlight control
                         selectCtrl.unselectAll();
-                        // TODO selectByPolygon.unselectAll();
                         highlightCtrl.unselectAll();
                         reportSelection();
                         selectByPolygon.deactivate();
@@ -685,22 +643,33 @@
 
                     selectByPolygon = new OpenLayers.Control.SelectFeature(wfs_layer,{
                         id:'selectByPolyId',
-                        displayClass:"selectByPoly",
                         multiple:true, // means that the selections from this tool are additive to other selections,
                         toggle:true,
                         box:true,
                         eventListeners: {
                             featurehighlighted:reportSelection,
                             featureunhighlighted:reportSelection
-                        },
-                        type: OpenLayers.Control.TYPE_TOGGLE // the tool icon can be pushed and pushed back
+                        }
                     });
 
-                    var container = document.getElementById("selectByPolyCtrl");
-                    toolPanel = new OpenLayers.Control.Panel({div:container});
-                    toolPanel.addControls([selectByPolygon]);                    
-                    // Adding the tool panel to the map
-                    vmap.addControl(toolPanel);
+                    // Adding the control to the map
+                    vmap.addControl(selectByPolygon);
+
+                    $('#selectByPolyCtrl').click(function()
+                    {
+                        if (selectByPolygon.active)
+                        {
+                            selectByPolygon.deactivate();
+                            // Icon back to black
+                            $('#selectByPolyCtrl i').removeClass("icon-white");
+                        }
+                        else
+                        {
+                            selectByPolygon.activate();
+                            // Icon switches to white
+                            $('#selectByPolyCtrl i').addClass("icon-white");
+                        }
+                    })
 
                     $('#downloadCtrl').click(function(){
                         // Finding the ID and label of the object in the assets_array structure
