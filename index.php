@@ -313,9 +313,9 @@
                         <div id="extraTools" class="hide">
                             <?php
                                 if ($logged_in){
-                                    echo '<a id="unselectAllCtrl" class="btn btn-mini tooltipClass disabled" href="#" title="Unselect all cells"><i class="icon-remove"></i></a>';
-                                    echo '<a id="selectByPolyCtrl" class="btn btn-mini tooltipClass" href="#" title="Select cells by polygon"><i class="icon-th"></i></a>';
-                                    echo '<a id="downloadCtrl" class="btn btn-mini tooltipClass" href="#" title="Download current occurence"><i class="icon-download-alt"></i></a>';
+                                    echo '<a id="unselectAllCtrl" class="btn btn-mini tooltipClass disabled" href="#" title="Unselect all selected cells"><i class="icon-remove"></i></a>';
+                                    echo '<a id="selectByPolyCtrl" class="btn btn-mini tooltipClass" href="#" title="Select cells by drawing a polygon"><i class="icon-th"></i></a>';
+                                    echo '<a id="downloadCtrl" class="btn btn-mini tooltipClass" href="#" title="Download current occurence as SHP"><i class="icon-download-alt"></i></a>';
                                 }
                             ?>
                         </div>
@@ -405,6 +405,8 @@
             var geoserver_root = "/geoserver";
             var current_occurence_label = "Current occurence";
             var baseline_occurence_label = "Baseline occurence";
+            var pd_current_label = "Potential Distribution Current";
+            var pd_future_label = "Potential Distribution Future";
             var initialMapCenter = new OpenLayers.LonLat(172, -42).transform(
                 new OpenLayers.Projection("EPSG:4326"),
                 new OpenLayers.Projection("EPSG:900913")
@@ -415,6 +417,8 @@
             var workspace_name="SQUAREEYES";
             var current_occurence_layername="CURRENT_OCCURENCE";
             var baseline_occurence_layername="BASELINE_OCCURENCE";
+            var pd_current_layername="PD_CURRENT";
+            var pd_future_layername="PD_FUTURE";
 
             var cell_history_ws = 'ws/ws_get_history.php';
             var asset_list_ws = 'ws/ws_asset_list.php';
@@ -797,6 +801,20 @@
                             vmap.removeLayer(layerToRemove2[0]);
                         }
 
+                        var layerToRemove3 = vmap.getLayersByName(pd_current_label);
+                        if (layerToRemove3.length)
+                        {
+                            // By construction, there is only one WMS layer with this name
+                            vmap.removeLayer(layerToRemove3[0]);
+                        }
+
+                        var layerToRemove4 = vmap.getLayersByName(pd_future_label);
+                        if (layerToRemove4.length)
+                        {
+                            // By construction, there is only one WMS layer with this name
+                            vmap.removeLayer(layerToRemove4[0]);
+                        }
+
                         // If the selection was changed to another weed (i.e. not cleared)
                         if (e.added)
                         {
@@ -835,6 +853,46 @@
                             // Add WMS layer to our map
                             vmap.addLayers([co_wms,bo_wms]);
 
+                            // Adding potential distribution layers if the asset_id is 
+                            if (e.added.id == 13)
+                            {
+                                // Adding the new ones
+                                var pdc_wms = new OpenLayers.Layer.WMS(pd_current_label,
+                                    geoserver_root+"/"+workspace_name+"/wms?",
+                                    {
+                                        "transparent":"true",
+                                        "layers":pd_current_layername,
+                                        "format":"image/png8",
+                                        "viewparams":"asset_id:"+e.added.id
+                                    },{
+                                        isBaseLayer: false,
+                                        singleTile:true,
+                                        visibility: false,
+                                        transitionEffect:'resize',
+                                        ratio : 1.3
+                                    }
+                                );
+
+                                var pdf_wms = new OpenLayers.Layer.WMS(pd_future_label,
+                                    geoserver_root+"/"+workspace_name+"/wms?",
+                                    {
+                                        "transparent":"true",
+                                        "layers":pd_future_layername,
+                                        "format":"image/png8",
+                                        "viewparams":"asset_id:"+e.added.id
+                                    },{
+                                        isBaseLayer: false,
+                                        singleTile:true,
+                                        visibility: false,
+                                        transitionEffect:'resize',
+                                        ratio : 1.3
+                                    }
+                                );
+
+                                // Add WMS layer to our map
+                                vmap.addLayers([pdc_wms,pdf_wms]);
+                            }
+
                             // Adding a legend link to show / hide the legend
                             $('.labelSpan').each(function(idx,e){
                                 $(e).after("<a id='legendLine"+idx+"' class='legendLink'>legend</a>");
@@ -847,6 +905,10 @@
                             // Adding a legend image
                             $('.dataLayersDiv > br').each(function(idx,e){
                                 var layerNameArr = ["CURRENT_OCCURENCE","BASELINE_OCCURENCE"];
+                                if ($("#e1")[0].value == "13")
+                                {
+                                    layerNameArr=layerNameArr.concat([pd_current_layername,pd_future_layername]);
+                                }
                                 $(e).before("<img id='imgLegendLine"+idx+"' class='hide' src='"+geoserver_root+"/wms?request=GetLegendGraphic&format=image%2Fpng&width=15&height=15&layer="+layerNameArr[idx]+"&transparent=true&LEGEND_OPTIONS=fontSize:11;fontAntiAliasing:true'/>");
                             });
 
