@@ -29,7 +29,7 @@ try {
 	$p_cells_id = $_REQUEST['field_selected_cells'];
 	$p_option_radio = $_REQUEST['field_options_radios'];
 	$p_logged_in_username = $_SESSION['logged-in-user'];
-	$p_email_address = sanitizeTextParameter($_REQUEST['field_email_address']);
+	$p_email_address = isset($_REQUEST['field_email_address']) ? sanitizeTextParameter($_REQUEST['field_email_address']) : '';
 	$p_comment = isset($_REQUEST['field_comment']) ? $_REQUEST['field_comment'] : '';
 	$p_comment = sanitizeTextParameter($p_comment);
 }

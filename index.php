@@ -148,6 +148,15 @@
             width: 320px;
         }
 
+        #userMgmtModal.modal {
+            width:500px;
+            height:400px;
+        }
+
+        #userMgmtModal.modal .modal-body {
+            height: 98%;
+        }
+
         .modal-header {
             padding: 0;
             border-bottom:none !important;
@@ -290,6 +299,15 @@
             </div>
         </div> <!-- /modal -->
 
+        <div class="modal hide" id="userMgmtModal">
+            <div class="modal-header">
+                <button id="closeUserMgmtModal" type="button" class="close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <iframe width="100%" height="100%" frameborder="0" scrolling="yes" allowtransparency="true" src="users/index.php" style="overflow-x:hidden; overflow-y:scroll;"></iframe>
+            </div>
+        </div>
+
         <div class="container-fluid">
             <div class="row-fluid">
                 <!-- the sidebar needs to be defined before the map fluid content! -->
@@ -299,27 +317,34 @@
                     <!-- Controls and additional layers -->
                     <div id="baseTools">
                         <?php
-                            $icon_class = "icon-user";
+                            $icon_class = "icon-arrow-right";
                             $logged_in_user_message = "";
                             $tooltip_msg="Login";
                             if ($logged_in){
-                                $icon_class .= " icon-white";
+                                $icon_class = "icon-arrow-left icon-white";
                                 $logged_in_user_message = "hello ".$logged_in_user;
                                 $tooltip_msg="Logout";
                             };
                             echo "<a href='#' class='btn btn-mini tooltipClass' data-toggle='tooltip' title='".$tooltip_msg."'><i id=\"loginTool\" class=\"".$icon_class." singleLineTools\" style=\"margin:2px 0px;\"></i></a>";
                             echo "<p id='helloP'>".$logged_in_user_message."</p>";
+                            if ($logged_in_role=="moderator")
+                            {
+                                echo '<a id="userManagementCtrl" class="btn btn-mini tooltipClass" href="#" title="Manage users & logins"><i class="icon-user"></i></a>';
+                            }
                         ?>
                         <div id="extraTools" class="hide">
                             <?php
                                 if ($logged_in){
                                     echo '<a id="unselectAllCtrl" class="btn btn-mini tooltipClass disabled" href="#" title="Unselect all selected cells"><i class="icon-remove"></i></a>';
                                     echo '<a id="selectByPolyCtrl" class="btn btn-mini tooltipClass" href="#" title="Select cells by drawing a polygon"><i class="icon-th"></i></a>';
-                                    echo '<a id="downloadCtrl" class="btn btn-mini tooltipClass" href="#" title="Download current occurence as SHP"><i class="icon-download-alt"></i></a>';
+                                    if ($logged_in_role=="moderator")
+                                    {
+                                        echo '<a id="downloadCtrl" class="btn btn-mini tooltipClass" href="#" title="Download current occurence as SHP"><i class="icon-download-alt"></i></a>';
+                                    }
                                 }
                             ?>
                         </div>
-                        <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:35px;"></div>
+                        <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:10px;"></div>
                     </div>
                     <!-- Message / info -->
                     <div id="extraLayers" class="hide"></div>
@@ -340,7 +365,6 @@
                             <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
                                 <input type="radio" name="field_options_radios" id="optionsRadios3" value="3">Approve
                             </label>
-                            <input type="text" name="field_email_address" placeholder="Your email address">
                             <!--
                             <textarea rows="2" name="field_comment" placeholder="Your comments"></textarea>
                             <div class="fileupload fileupload-new" data-provides="fileupload">
@@ -388,7 +412,7 @@
         <!-- Letting Google host and serve jQuery for us -->
         <!-- based on http://encosia.com/3-reasons-why-you-should-let-google-host-jquery-for-you/ -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
-        <script src="bootstrap/js/bootstrap.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
         <!-- A plugin for AJAXifying form serialisation, especially useful for file upload -->
         <script src="jquery.form.js"></script>
         <!-- A plugin in for a nice file upload field in Bootstrap -->
@@ -693,6 +717,11 @@
                         window.open(url, 'Download');
                     });
 
+                    $('#userManagementCtrl').click(function(){
+                        //alert('User management not implemented yet');
+                        $('#userMgmtModal').show();
+                    });
+
                 }
 
                 initMap();
@@ -717,6 +746,11 @@
                     $('#myLoginModal').modal({backdrop:true,show:false});
                     $('#closeLoginModal').click(function(){
                         $('#myLoginModal').hide();
+                    });
+
+                    $('#userMgmtModal').modal({backdrop:true,show:false});
+                    $('#closeUserMgmtModal').click(function(){
+                        $('#userMgmtModal').hide();
                     });
 
                     // Clicking the login form button ... sends the form
