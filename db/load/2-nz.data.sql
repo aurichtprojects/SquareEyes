@@ -53,6 +53,6 @@ INSERT INTO nz.r_role(id, label) VALUES (2, 'User');
 
 truncate table nz."user";
 INSERT INTO nz."user"(id, name, role_id, password) VALUES (1, 'moderator', 1, 'test');
-INSERT INTO nz."user"(id, name, role_id, password) VALUES (2, 'user1', 2, 'test');
-INSERT INTO nz."user"(id, name, role_id, password) VALUES (3, 'user2', 2, 'test');
+INSERT INTO nz."user"(id, name, role_id, password, email) VALUES (2, 'user1', 2, 'test', 'test@test.com');
+INSERT INTO nz."user"(id, name, role_id, password, email) VALUES (3, 'user2', 2, 'test', 'test@test.org');
 
