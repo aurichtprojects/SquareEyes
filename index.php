@@ -639,7 +639,7 @@
                         highlightCtrl.unselectAll();
                         reportSelection();
                         selectByPolygon.deactivate();
-
+                        $('#selectByPolyCtrl i').removeClass("icon-white");
                         $('#unselectAllCtrl').blur();
                     };
 
@@ -948,6 +948,8 @@
                     $('.fileupload').fileupload('reset');
                     $('#mod_form').each (function(){this.reset();});
                     $('form input[type="text"], form textarea').val('');
+                    // Finish by deselecting cells
+                    unselectAllFeatures();
                 })
 
                 $('#save').on('click',function(){
@@ -974,7 +976,6 @@
 
                             // Clearing up the form and the selection
                             $('#cancel').click();
-                            unselectAllFeatures();
 
                             $('#formOutput').html("Just created observation #"+data.observation_id+img_block).show();
                         }
