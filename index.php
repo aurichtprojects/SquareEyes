@@ -365,47 +365,46 @@
 
                     <!-- Action / form -->
                     <div class="<?php if (!$logged_in) {echo "hide";} ?>">
-                    <div id="extraActions" class="well hide">
-                        <!-- Show history -->
-                        <div id="extraInfo" class="hide"></div>
-
-                        <!-- Report / moderate form -->
-                        <form id="mod_form" action="ws/ws_create_observation.php" method="POST">
-
-                            <div class="well">
-                            <h3><?php if ($logged_in_role == 'moderator') {echo "Moderate";} else {echo "Report";} ?>:</h3>
-                            <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
-                                <input type="radio" name="field_options_radios" id="optionsRadios1" value="1">Reject
-                            </label>
-                            <label class="radio <?php if ($logged_in_role == 'moderator') {echo "hide";} ?>">
-                                <input type="radio" name="field_options_radios" id="optionsRadios2" value="2">Report presence
-                            </label>
-                            <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
-                                <input type="radio" name="field_options_radios" id="optionsRadios3" value="3">Approve
-                            </label>
-                            <!--
-                            <textarea rows="2" name="field_comment" placeholder="Your comments"></textarea>
-                            <div class="fileupload fileupload-new" data-provides="fileupload">
-                                <div class="fileupload-new thumbnail" style="width: 100px; height: 100px;">
-                                    <img src="http://www.placehold.it/100x100/EFEFEF/AAAAAA&text=no+image" />
+                        <div id="extraActions" class="well hide">
+                            <!-- Show history -->
+                            <div id="extraInfo" class="hide"></div>
+                            <!-- Report / moderate form -->
+                            <form id="mod_form" action="ws/ws_create_observation.php" method="POST">
+                                <div class="well">
+                                    <h3><?php if ($logged_in_role == 'moderator') {echo "Moderate";} else {echo "Report";} ?>:</h3>
+                                    <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
+                                        <input type="radio" name="field_options_radios" id="optionsRadios1" value="1">Reject
+                                    </label>
+                                    <label class="radio <?php if ($logged_in_role == 'moderator') {echo "hide";} ?>">
+                                        <input type="radio" name="field_options_radios" id="optionsRadios2" value="2">Report presence
+                                    </label>
+                                    <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
+                                        <input type="radio" name="field_options_radios" id="optionsRadios3" value="3">Approve
+                                    </label>
+                                    <!--
+                                    <textarea rows="2" name="field_comment" placeholder="Your comments"></textarea>
+                                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                                        <div class="fileupload-new thumbnail" style="width: 100px; height: 100px;">
+                                            <img src="http://www.placehold.it/100x100/EFEFEF/AAAAAA&text=no+image" />
+                                        </div>
+                                        <div class="fileupload-preview fileupload-exists thumbnail" style="width: 100px; height: 100px;"></div>
+                                        <span class="btn btn-file">
+                                            <span class="fileupload-new">Attach photo</span>
+                                            <span class="fileupload-exists">Change photo</span>
+                                            <input name="field_file" type="file" />
+                                        </span>
+                                        <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove photo</a>
+                                    </div>
+                                    -->
+                                    <input type="hidden" name="field_asset" value="">
+                                    <input type="hidden" name="field_selected_cells" value="">
+                                    <button type="button" id="save" class="btn btn-primary right">Save</button>
+                                    <button type="button" id="cancel" class="btn btn-link right">Clear</button>
+                                    <!-- Style issue here where the buttons appear outside of the well -->
+                                    <br/><br/>
                                 </div>
-                                <div class="fileupload-preview fileupload-exists thumbnail" style="width: 100px; height: 100px;"></div>
-                                <span class="btn btn-file">
-                                    <span class="fileupload-new">Attach photo</span>
-                                    <span class="fileupload-exists">Change photo</span>
-                                    <input name="field_file" type="file" />
-                                </span>
-                                <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove photo</a>
-                            </div>
-                            -->
-                            <input type="hidden" name="field_asset" value="">
-                            <input type="hidden" name="field_selected_cells" value="">
-                            <button type="button" id="save" class="btn btn-primary right">Save</button>
-                            <button type="button" id="cancel" class="btn btn-link right">Clear</button>
-                            <!-- Style issue here where the buttons appear outside of the well -->
-                            <br/><br/>
-                        </div>
-                        </form>
+                            </form>
+
                     </div>
                     <div id="formOutput" class="well hide"></div>
                 </div>
@@ -444,7 +443,7 @@
         <!-- Crypto library used to encode the password in MD5 before POSTing it for login attempt -->
         <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
         <script>
-            var vmap, wfs_layer,assets_array,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl,unselectAllFeatures,historyClick,getSelectedCellsArray;
+            var vmap, activateControls, wfs_layer,assets_array,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl,unselectAllFeatures,historyClick,getSelectedCellsArray;
             var gridMaxRes = 400;
             var geoserver_root = "/geoserver";
             var current_occurence_label = "Current occurence";
@@ -484,6 +483,38 @@
 
             $(document).ready(function () {
                 function initMap(){
+                    // Managing activated controls
+                    activateControls = function(){
+                        if (vmap && wfs_layer)
+                        {
+                            // Controls should only be activated if the layer is both visible and in range
+                            if (wfs_layer.getVisibility() && wfs_layer.calculateInRange() && $('#e1').val())
+                            {
+                                if (!highlightCtrl.active)
+                                {
+                                    highlightCtrl.activate();
+                                }
+                                if (!selectCtrl.active)
+                                {
+                                    selectCtrl.activate();
+                                }
+                            }
+                            else
+                            {
+                                if (highlightCtrl.active)
+                                {
+                                    highlightCtrl.unselectAll();
+                                    highlightCtrl.deactivate();
+                                }
+                                if (selectCtrl.active)
+                                {
+                                    selectCtrl.unselectAll();
+                                    selectCtrl.deactivate();
+                                }
+                            }
+                        }
+                    };
+
                     var mapOptions = {
                             projection: "EPSG:900913",
                             units: "m",
@@ -496,14 +527,17 @@
                                 new OpenLayers.Control.ZoomBox({'keyMask': OpenLayers.Handler.MOD_SHIFT})
                             ],
                             numZoomLevels:20,
-                            theme: null
+                            theme: null,
+                            eventListeners: {
+                                "zoomend": activateControls
+                            }
                     };
 
                     // disabling the OpenLayers 2.13 smooth zoom, it's just not smooth in IE/Firefox
                     if (!($.browser.webkit))
                     {
                         mapOptions["zoomMethod"]=null;
-                    }
+                    };
 
                     vmap = new OpenLayers.Map('map', mapOptions);
 
@@ -968,8 +1002,7 @@
                             });
 
                             // Activating the controls
-                            highlightCtrl.activate();
-                            selectCtrl.activate();
+                            activateControls();
 
                             // Showing panel with extra tools
                             $('#extraTools').removeClass('hide').addClass('singleLineTools');
@@ -982,10 +1015,7 @@
                         else
                         {
                             // De-selecting and deactivating the controls
-                            highlightCtrl.unselectAll();
-                            selectCtrl.unselectAll();
-                            highlightCtrl.deactivate();
-                            selectCtrl.deactivate();
+                            activateControls();
 
                             $('#extraTools').addClass('hide').removeClass('singleLineTools');
                             $('#extraLayers').hide();
