@@ -584,7 +584,8 @@
                         styleMap: sm,
                         maxResolution:gridMaxRes,
                         displayInLayerSwitcher:false,
-                        transitionEffect:'resize'
+                        transitionEffect:'resize',
+                        visibility: <?php if ($logged_in) {echo 'true';} else {echo 'false';} ?>
                         }
                     );
 
