@@ -83,18 +83,28 @@
     <style type="text/css">
 
         body {
-            padding: 10px;
+            padding: 5px;
         }
 
         .container-fluid {
             padding: 0;
         }
 
-        /* CSS for a fluid-fixed layout based on http://jsfiddle.net/andresilich/6vPqA/13/ */
+        h3 {
+            font-size: 14.5px;
+            font-weight: normal;
+            line-height: 20px;
+            margin: 0;
+        }
 
+        form {
+            margin: 0;
+        }
+
+        /* CSS for a fluid-fixed layout based on http://jsfiddle.net/andresilich/6vPqA/13/ */
         .well {
-            padding:9px;
-            margin-bottom:0;
+            padding:5px;
+            margin-bottom: 5px;
         }
 
         .scrollable {
@@ -102,7 +112,7 @@
         }
 
         .fluid-fixed {
-            margin-right: 310px;
+            margin-right: 325px;
             margin-left:auto !important;
             display: block;
         }
@@ -111,7 +121,7 @@
             position: relative;
             top: 0;
             left:auto;
-            width: 280px;
+            width: 305px;
         }
 
         .right {
@@ -185,13 +195,12 @@
         }
 
         #extraLayers {
-          margin:10px 0 5px;
+          margin:0px 0 5px;
           text-align:left;
         }
 
         #extraInfo {
           text-align:left;
-          margin-top: 15px;
         }
 
         #formOutput {
@@ -207,7 +216,7 @@
         }
 
         legend {
-            margin-bottom: 0;
+            margin-bottom: 5px;
         }
 
         input[type="radio"], input[type="checkbox"] {
@@ -311,9 +320,11 @@
         <div class="container-fluid">
             <div class="row-fluid">
                 <!-- the sidebar needs to be defined before the map fluid content! -->
-                <div id="sidebar" class="well right sidebar-nav scrollable">
+                <div id="sidebar" class="well right sidebar-nav scrollable" style="margin-bottom:0;">
                     <!-- Drop down -->
-                    <input type="hidden" id="e1" style="width:265px"/>
+                    <div class="well">
+                    <legend>Weed</legend>
+                    <input type="hidden" id="e1" style="width:272px;"/>
                     <!-- Controls and additional layers -->
                     <div id="baseTools">
                         <?php
@@ -344,18 +355,24 @@
                                 }
                             ?>
                         </div>
-                        <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:10px;"></div>
+                        <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:10px;font-size:9px;"></div>
                     </div>
+                    </div>
+
                     <!-- Message / info -->
-                    <div id="extraLayers" class="hide"></div>
+                    <div id="extraLayers" class="well hide"></div>
 
                     <!-- Action / form -->
                     <div class="<?php if (!$logged_in) {echo "hide";} ?>">
-                    <div id="extraActions" class="hide">
+                    <div id="extraActions" class="well hide">
+                        <!-- Show history -->
+                        <div id="extraInfo" class="hide"></div>
+
+                        <!-- Report / moderate form -->
                         <form id="mod_form" action="ws/ws_create_observation.php" method="POST">
-                            <div id="extraInfo" class="hide"></div>
-                            <!-- Message / info -->
-                            <legend><?php if ($logged_in_role == 'moderator') {echo "Moderate";} else {echo "Report";} ?></legend>
+
+                            <div class="well">
+                            <h3><?php if ($logged_in_role == 'moderator') {echo "Moderate";} else {echo "Report";} ?>:</h3>
                             <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
                                 <input type="radio" name="field_options_radios" id="optionsRadios1" value="1">Reject
                             </label>
@@ -382,16 +399,18 @@
                             -->
                             <input type="hidden" name="field_asset" value="">
                             <input type="hidden" name="field_selected_cells" value="">
-                            <br/>
                             <button type="button" id="save" class="btn btn-primary right">Save</button>
-                            <button type="button" id="cancel" class="btn btn-danger">Cancel</button>
+                            <button type="button" id="cancel" class="btn btn-link right">Clear</button>
+                            <!-- Style issue here where the buttons appear outside of the well -->
+                            <br/><br/>
+                        </div>
                         </form>
                     </div>
                     <div id="formOutput" class="well hide"></div>
                 </div>
             </div>
 
-            <div class="well fluid-fixed">
+            <div class="well fluid-fixed" style="margin-bottom:0;">
                 <!--Body content-->
                 <div id="map" class="smallmap"></div>
                 <div id="myHistoryModal" class="modal hide">
@@ -452,10 +471,10 @@
                 var h = $(window).height();
                 var w = $(window).width();
                 // Setting height to window height minus the header and footer sizes
-                $("#map").css('height',h - 42);
-                $("#map").css('width', w - 352);
+                $("#map").css('height',h - 25);
+                $("#map").css('width', w - 351);
                 // Setting the height of the sidebar as well, as it's getting an unwelcome scrollbar lateral shift
-                $("#sidebar").css('height',h - 40)
+                $("#sidebar").css('height',h - 23)
             };
 
             // Initial width/height values are required for display of vector layer
@@ -518,7 +537,7 @@
                         {'div':$('#extraLayers')[0]}
                     ));
                     // Rewriting the text for Overlays, based on the OpenLayers control nested structure
-                    $('#extraLayers div div.dataLbl').html("<legend>Layers available</legend>");
+                    $('#extraLayers div div.dataLbl').html("<legend>Layers</legend>");
 
                     // Adding a zoom to full extent button between the zoom +/-
                     $('.olControlZoomIn').after("<a id='olControlZoomToMaxExtent' class='olControlZoomToMaxExtent olButton' href='#zoomToMaxExtent'>&nbsp;</a>");
@@ -602,7 +621,7 @@
                             {
                                 $('#extraInfo').show();
                                 $('#extraActions').show();
-                                $('#extraInfo').html("For the "+(nsf==1?"":nsf+" ")+"selected cell"+(nsf==1?"":"s")+", show <a href='#' onClick='historyClick()'>history</a> or:");
+                                $('#extraInfo').html("<legend>Selection: "+nsf+" cell"+(nsf==1?"":"s")+"</legend><div class='well'><h3>Show <a href='#' onClick='historyClick()'>history</a></h3></div>");
                                 $('#unselectAllCtrl').removeClass("disabled");
                                 $('#formOutput').html("").hide();
                             }
@@ -932,7 +951,7 @@
                                 $(e).after("<a id='legendLine"+idx+"' class='legendLink'>legend</a>");
                                 $("#legendLine"+idx).click(function(){
                                     var imgLgd = $('#imgLegendLine'+idx);
-                                    if (imgLgd.hasClass('hide')) {imgLgd.removeClass('hide');} else {imgLgd.addClass('hide');}
+                                    if (imgLgd.hasClass('hide')) {imgLgd.removeClass('hide');imgLgd.css({display:'block'});} else {imgLgd.addClass('hide');imgLgd.css({display:'none'});}
                                 });
                             });
 
@@ -943,7 +962,7 @@
                                 {
                                     layerNameArr=layerNameArr.concat([pd_current_layername,pd_future_layername]);
                                 }
-                                $(e).before("<img id='imgLegendLine"+idx+"' class='hide' src='"+geoserver_root+"/wms?request=GetLegendGraphic&format=image%2Fpng&width=15&height=15&layer="+layerNameArr[idx]+"&transparent=true&LEGEND_OPTIONS=fontSize:11;fontAntiAliasing:true'/>");
+                                $(e).replaceWith("<br><img id='imgLegendLine"+idx+"' class='hide' src='"+geoserver_root+"/wms?request=GetLegendGraphic&format=image%2Fpng&width=15&height=15&layer="+layerNameArr[idx]+"&transparent=true&LEGEND_OPTIONS=fontSize:11;fontAntiAliasing:true'/>");
                             });
 
                             // Activating the controls
