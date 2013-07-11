@@ -324,42 +324,40 @@
                 <div id="sidebar" class="well right sidebar-nav scrollable" style="margin-bottom:0;">
                     <!-- Drop down -->
                     <div class="well">
-                    <legend>Weed</legend>
-                    <input type="hidden" id="e1" style="width:272px;"/>
-                    <!-- Controls and additional layers -->
-                    <div id="baseTools">
-                        <?php
-                            $icon_class = "icon-arrow-right";
-                            $logged_in_user_message = "";
-                            $tooltip_msg="Login";
-                            if ($logged_in){
-                                $icon_class = "icon-arrow-left icon-white";
-                                $logged_in_user_message = "hello ".$logged_in_user;
-                                $tooltip_msg="Logout";
-                            };
-                            echo "<a href='#' class='btn btn-mini tooltipClass' data-toggle='tooltip' title='".$tooltip_msg."'><i id=\"loginTool\" class=\"".$icon_class." singleLineTools\" style=\"margin:2px 0px;\"></i></a>";
-                            echo "<p id='helloP'>".$logged_in_user_message."</p>";
-                            if ($logged_in_role=="moderator")
-                            {
-                                echo '<a id="userManagementCtrl" class="btn btn-mini tooltipClass" href="#" title="Manage users & logins"><i class="icon-user"></i></a>';
-                            }
-                        ?>
-                        <div id="extraTools" class="hide">
+                        <legend>Weed</legend>
+                        <input type="hidden" id="e1" style="width:272px;"/>
+                        <!-- Controls and additional layers -->
+                        <div id="baseTools">
                             <?php
+                                $icon_class = "icon-arrow-right";
+                                $logged_in_user_message = "";
+                                $tooltip_msg="Login";
                                 if ($logged_in){
-                                    echo '<a id="unselectAllCtrl" class="btn btn-mini tooltipClass disabled" href="#" title="Unselect all selected cells"><i class="icon-remove"></i></a>';
-                                    echo '<a id="selectByPolyCtrl" class="btn btn-mini tooltipClass" href="#" title="Select cells by drawing a polygon"><i class="icon-th"></i></a>';
-                                    if ($logged_in_role=="moderator")
-                                    {
-                                        echo '<a id="downloadCtrl" class="btn btn-mini tooltipClass" href="#" title="Download current occurence as SHP"><i class="icon-download-alt"></i></a>';
-                                    }
+                                    $icon_class = "icon-arrow-left icon-white";
+                                    $logged_in_user_message = "hello ".$logged_in_user;
+                                    $tooltip_msg="Logout";
+                                };
+                                echo "<a href='#' class='btn btn-mini tooltipClass' data-toggle='tooltip' title='".$tooltip_msg."'><i id=\"loginTool\" class=\"".$icon_class." singleLineTools\" style=\"margin:2px 0px;\"></i></a>";
+                                echo "<p id='helloP'>".$logged_in_user_message."</p>";
+                                if ($logged_in_role=="moderator")
+                                {
+                                    echo '<a id="userManagementCtrl" class="btn btn-mini tooltipClass" href="#" title="Manage users & logins"><i class="icon-user"></i></a>';
                                 }
                             ?>
+                            <div id="extraTools" class="hide">
+                                <?php
+                                    if ($logged_in){
+                                        echo '<a id="unselectAllCtrl" class="btn btn-mini tooltipClass disabled" href="#" title="Unselect all selected cells"><i class="icon-remove"></i></a>';
+                                        echo '<a id="selectByPolyCtrl" class="btn btn-mini tooltipClass" href="#" title="Select cells by drawing a polygon"><i class="icon-th"></i></a>';
+                                        if ($logged_in_role=="moderator")
+                                        {
+                                            echo '<a id="downloadCtrl" class="btn btn-mini tooltipClass" href="#" title="Download current occurence as SHP"><i class="icon-download-alt"></i></a>';
+                                        }
+                                    }
+                                ?>
+                            </div>
+                            <div id="currentCell" class="singleLineTools" style="margin-top:12px;line-height:10px; margin-left:5px;font-size:10px;text-align:center;width:35px;"></div>
                         </div>
-                        <div <?php if (!$logged_in) {echo "class='hide'";} else {echo "style='display:inline-block'";} ?>>
-                            <div id="currentCell" class="singleLineTools" style="margin-top:6px;line-height:10px; margin-left:5px;font-size:10px;text-align:center;width:35px;"></div>
-                        </div>
-                    </div>
                     </div>
 
                     <!-- Message / info -->
