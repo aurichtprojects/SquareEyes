@@ -356,7 +356,9 @@
                                 }
                             ?>
                         </div>
-                        <div id="currentCell" class="singleLineTools" style="margin-top:12px;line-height:10px; margin-left:5px;font-size:10px;text-align:center;width:35px;"></div>
+                        <div <?php if (!$logged_in) {echo "class='hide'";} else {echo "style='display:inline-block'";} ?>>
+                            <div id="currentCell" class="singleLineTools" style="margin-top:6px;line-height:10px; margin-left:5px;font-size:10px;text-align:center;width:35px;"></div>
+                        </div>
                     </div>
                     </div>
 
@@ -589,7 +591,7 @@
                     vmap.addLayer(wfs_layer);
 
                     var report = function(e) {
-                        $('#currentCell').html("cell ID: "+e.feature.fid.split(".")[1]);
+                        $('#currentCell').html("cell ID "+e.feature.fid.split(".")[1]);
                     };
 
                     var unreport = function(e) {
