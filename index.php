@@ -216,6 +216,7 @@
         }
 
         legend {
+            font-size: 25px;
             margin-bottom: 5px;
         }
 
@@ -313,7 +314,7 @@
                 <button id="closeUserMgmtModal" type="button" class="close">&times;</button>
             </div>
             <div class="modal-body">
-                <iframe width="100%" height="100%" frameborder="0" scrolling="yes" allowtransparency="true" src="users/index.php" style="overflow-x:hidden; overflow-y:scroll;"></iframe>
+                <iframe width="100%" height="98%" frameborder="0" scrolling="yes" allowtransparency="true" src="users/index.php" style="overflow-x:hidden; overflow-y:auto;"></iframe>
             </div>
         </div>
 
@@ -355,7 +356,7 @@
                                 }
                             ?>
                         </div>
-                        <div id="currentCell" class="singleLineTools" style="margin-top:12px;margin-left:10px;font-size:9px;"></div>
+                        <div id="currentCell" class="singleLineTools" style="margin-top:12px;line-height:10px; margin-left:5px;font-size:10px;text-align:center;width:35px;"></div>
                     </div>
                     </div>
 
@@ -588,7 +589,7 @@
                     vmap.addLayer(wfs_layer);
 
                     var report = function(e) {
-                        $('#currentCell').html(e.feature.fid.split(".")[1]);
+                        $('#currentCell').html("cell ID: "+e.feature.fid.split(".")[1]);
                     };
 
                     var unreport = function(e) {
