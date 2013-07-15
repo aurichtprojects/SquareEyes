@@ -80,6 +80,7 @@
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="bootstrap/css/bootstrap-fileupload.min.css" rel="stylesheet">
     <link href="select2/select2.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="openlayers/theme/default/google.css" type="text/css">
     <style type="text/css">
 
         body {
@@ -262,6 +263,21 @@
             margin-top: 10px;
         }
 
+        #basemapControls {
+            left: 100%;
+            margin-left: -385px;
+            position: absolute;
+            top: 15px;
+            z-index: 1000;
+        }
+
+        .dropdown-menu .divider {
+            margin: 1px;
+        }
+
+        .dropdown-menu > li > a {
+            padding:3px 10px;
+        }
     </style>
     <!--<link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">-->
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -412,7 +428,22 @@
 
             <div class="well fluid-fixed" style="margin-bottom:0;">
                 <!--Body content-->
-                <div id="map" class="smallmap"></div>
+                <div id="map" class="smallmap" style="background-color: white;"></div>
+                <div id="basemapControls">
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="padding: 4px 6px;">
+                            <img src="layers.png" style="width:16px;height:16px;" class="img-rounded">
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" style="left:auto; right:0; min-width: 60px; font-size:10px;">
+                            <li><a href="#" onClick="changeBasemapTo('OSM')">OpenStreetMap</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#" onClick="changeBasemapTo('Google Satellite')">Google Aerial</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#" onClick="changeBasemapTo('None')">None</a></li>
+                        </ul>
+                    </div>
+                </div>
                 <div id="myHistoryModal" class="modal hide">
                     <div class="modal-header">
                         <button id="closeModal" type="button" class="close">&times;</button>
@@ -428,6 +459,8 @@
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="openlayers/OpenLayers.js"></script>
+        <!-- Google Maps API -->
+        <script src='http://maps.google.com/maps/api/js?v=3&amp;sensor=false'></script>
         <!-- Letting Google host and serve jQuery for us -->
         <!-- based on http://encosia.com/3-reasons-why-you-should-let-google-host-jquery-for-you/ -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
@@ -443,7 +476,7 @@
         <!-- Crypto library used to encode the password in MD5 before POSTing it for login attempt -->
         <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
         <script>
-            var vmap, activateControls, wfs_layer,assets_array,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl,unselectAllFeatures,historyClick,getSelectedCellsArray;
+            var vmap, changeBasemapTo,activateControls, wfs_layer,assets_array,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl,unselectAllFeatures,historyClick,getSelectedCellsArray;
             var gridMaxRes = 400;
             var geoserver_root = "/geoserver";
             var current_occurence_label = "Current occurence";
@@ -580,8 +613,37 @@
                         vmap.moveTo(initialMapCenter,initialZoomLevel);
                     });
 
-                    osm = new OpenLayers.Layer.OSM("Simple OSM Map","",{'displayInLayerSwitcher':false});
+                    var osm = new OpenLayers.Layer.OSM("OSM","",{displayInLayerSwitcher:false});
                     vmap.addLayer(osm);
+
+                    var clearBaseLayer = new OpenLayers.Layer("None", {isBaseLayer: true, displayInLayerSwitcher:false}); 
+                    vmap.addLayer(clearBaseLayer);
+
+                    var glayers= [
+                        /* Unused layers have been commented out but left in case they are needed
+                        new OpenLayers.Layer.Google(
+                            "Google Physical",
+                            {type: google.maps.MapTypeId.TERRAIN, displayInLayerSwitcher:false}
+                        ),
+                        new OpenLayers.Layer.Google(
+                            "Google Streets", // the default
+                            {numZoomLevels: 20, displayInLayerSwitcher:false}
+                        ),
+                        new OpenLayers.Layer.Google(
+                            "Google Hybrid",
+                            {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20, displayInLayerSwitcher:false}
+                        ), */
+                        new OpenLayers.Layer.Google(
+                            "Google Satellite",
+                            {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22, displayInLayerSwitcher:false}
+                        )
+                    ];
+                    vmap.addLayers(glayers);
+
+                    changeBasemapTo = function(basemapInternalName){
+                        vmap.setBaseLayer(vmap.getLayersByName(basemapInternalName)[0]);
+                    }
+
                     vmap.setCenter(initialMapCenter, initialZoomLevel);
 
                     // Style definition for the grid vector layer
