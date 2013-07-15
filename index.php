@@ -492,6 +492,7 @@
             var cellLayerNamespace = "http://www.pozi.com/squareeyes";
             var workspace_name="SQUAREEYES";
             var current_occurence_layername="CURRENT_OCCURENCE";
+            var current_occurence_download_layername = "CURRENT_OCCURENCE_DL";
             var baseline_occurence_layername="BASELINE_OCCURENCE";
             var pd_current_layername="PD_CURRENT";
             var pd_future_layername="PD_FUTURE";
@@ -830,7 +831,7 @@
                             }
                         }
                         // Setting the download link correctly
-                        var url = window.location.protocol+"//"+window.location.host+geoserver_root+"/"+workspace_name+"/ows?service=WFS&version=1.0.0&request=GetFeature&typeName="+workspace_name+"%3A"+current_occurence_layername+"&maxfeatures=3500&outputformat=SHAPE-ZIP&VIEWPARAMS=asset_id:"+asset_id+"&format_options=filename:"+asset_name;
+                        var url = window.location.protocol+"//"+window.location.host+geoserver_root+"/"+workspace_name+"/ows?service=WFS&version=1.0.0&request=GetFeature&typeName="+workspace_name+"%3A"+current_occurence_download_layername+"&maxfeatures=3500&outputformat=SHAPE-ZIP&VIEWPARAMS=asset_id:"+asset_id+"&format_options=filename:"+asset_name;
                         window.open(url, 'Download');
                     });
 
