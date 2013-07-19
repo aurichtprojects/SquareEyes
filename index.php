@@ -448,6 +448,10 @@
                             <li class="divider"></li>
                             <li><a href="#" onClick="changeBasemapTo('Google Satellite')">Google Aerial</a></li>
                             <li class="divider"></li>
+                            <li><a href="#" onClick="changeBasemapTo('Google Physical')">Google Terrain</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#" onClick="changeBasemapTo('Google Streets')">Google Maps</a></li>
+                            <li class="divider"></li>
                             <li><a href="#" onClick="changeBasemapTo('None')">None</a></li>
                         </ul>
                     </div>
@@ -629,7 +633,6 @@
                     vmap.addLayer(clearBaseLayer);
 
                     var glayers= [
-                        /* Unused layers have been commented out but left in case they are needed
                         new OpenLayers.Layer.Google(
                             "Google Physical",
                             {type: google.maps.MapTypeId.TERRAIN, displayInLayerSwitcher:false}
@@ -638,6 +641,7 @@
                             "Google Streets", // the default
                             {numZoomLevels: 20, displayInLayerSwitcher:false}
                         ),
+                        /*  Unused layers have been commented out but left in case they are needed
                         new OpenLayers.Layer.Google(
                             "Google Hybrid",
                             {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20, displayInLayerSwitcher:false}
