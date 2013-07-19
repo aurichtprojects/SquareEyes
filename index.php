@@ -225,16 +225,24 @@
             margin: 0;
         }
 
+        div.olControlZoom a {
+            background: none repeat scroll 0 0 rgba(160, 160, 160, 0.25);
+        }
+
+        div.olControlZoom a:hover {
+            background: none repeat scroll 0 0 rgba(160, 160, 160, 0.75);
+        }
+
         div.olControlZoom a.olControlZoomToMaxExtent {
           width:  22px;
           height: 22px;
-          background: url("nz.png") no-repeat scroll 0 0 rgba(0, 60, 135, 0.5);
+          background: url("nz.png") no-repeat scroll 0 0 rgba(160, 160, 160, 0.25);
         }
 
         div.olControlZoom a.olControlZoomToMaxExtent:hover {
           width:  22px;
           height: 22px;
-          background: url("nz.png") no-repeat scroll 0 0 rgba(0, 60, 135, 0.7);
+          background: url("nz.png") no-repeat scroll 0 0 rgba(160, 160, 160, 0.75);
         }
 
         #helloP {
