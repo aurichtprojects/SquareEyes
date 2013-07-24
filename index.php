@@ -405,7 +405,7 @@
                                     <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
                                         <input type="radio" name="field_options_radios" id="optionsRadios3" value="3">Approve
                                     </label>
-                                    <!--
+                                    <!-- START COMMENT UPLOAD-->
                                     <textarea rows="2" name="field_comment" placeholder="Your comments"></textarea>
                                     <div class="fileupload fileupload-new" data-provides="fileupload">
                                         <div class="fileupload-new thumbnail" style="width: 100px; height: 100px;">
@@ -419,7 +419,7 @@
                                         </span>
                                         <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove photo</a>
                                     </div>
-                                    -->
+                                    <!-- END COMMENT UPLOAD -->
                                     <input type="hidden" name="field_asset" value="">
                                     <input type="hidden" name="field_selected_cells" value="">
                                     <button type="button" id="save" class="btn btn-primary right">Save</button>
