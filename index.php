@@ -378,7 +378,7 @@
                                         echo '<a id="selectByPolyCtrl" class="btn btn-mini tooltipClass" href="#" title="Select cells by drawing a polygon"><i class="icon-th"></i></a>';
                                         if ($logged_in_role=="moderator")
                                         {
-                                            echo '<a id="downloadCtrl" class="btn btn-mini tooltipClass" href="#" title="Download current occurence as SHP"><i class="icon-download-alt"></i></a>';
+                                            echo '<a id="downloadCtrl" class="btn btn-mini tooltipClass" href="#" title="Download current occurrence as SHP"><i class="icon-download-alt"></i></a>';
                                         }
                                     }
                                 ?>
@@ -402,7 +402,7 @@
                                     <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
                                         <input type="radio" name="field_options_radios" id="optionsRadios1" value="1">Reject
                                     </label>
-                                    <label class="radio <?php if ($logged_in_role == 'moderator') {echo "hide";} ?>">
+                                    <label class="radio">
                                         <input type="radio" name="field_options_radios" id="optionsRadios2" value="2">Report presence
                                     </label>
                                     <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
@@ -503,10 +503,10 @@
                 }
             }
             var geoserver_root = "/geoserver";
-            var current_occurence_label = "Current occurence";
-            var baseline_occurence_label = "Baseline occurence";
-            var pd_current_label = "Potential Distribution Current";
-            var pd_future_label = "Potential Distribution Future";
+            var current_occurrence_label = "Current occurrence";
+            var baseline_occurrence_label = "Baseline occurrence";
+            var pd_current_label = "Potential distribution current";
+            var pd_future_label = "Potential distribution future";
             var initialMapCenter = new OpenLayers.LonLat(172, -42).transform(
                 new OpenLayers.Projection("EPSG:4326"),
                 new OpenLayers.Projection("EPSG:900913")
@@ -515,9 +515,9 @@
             var cellLayerName="CELL";
             var cellLayerNamespace = "http://www.pozi.com/squareeyes";
             var workspace_name="SQUAREEYES";
-            var current_occurence_layername="CURRENT_OCCURENCE";
-            var current_occurence_download_layername = "CURRENT_OCCURENCE_DL";
-            var baseline_occurence_layername="BASELINE_OCCURENCE";
+            var current_occurrence_layername="CURRENT_OCCURENCE";
+            var current_occurrence_download_layername = "CURRENT_OCCURENCE_DL";
+            var baseline_occurrence_layername="BASELINE_OCCURENCE";
             var pd_current_layername="PD_CURRENT";
             var pd_future_layername="PD_FUTURE";
 
@@ -855,7 +855,7 @@
                             }
                         }
                         // Setting the download link correctly
-                        var url = window.location.protocol+"//"+window.location.host+geoserver_root+"/"+workspace_name+"/ows?service=WFS&version=1.0.0&request=GetFeature&typeName="+workspace_name+"%3A"+current_occurence_download_layername+"&maxfeatures=3500&outputformat=SHAPE-ZIP&VIEWPARAMS=asset_id:"+asset_id+"&format_options=filename:"+asset_name;
+                        var url = window.location.protocol+"//"+window.location.host+geoserver_root+"/"+workspace_name+"/ows?service=WFS&version=1.0.0&request=GetFeature&typeName="+workspace_name+"%3A"+current_occurrence_download_layername+"&maxfeatures=3500&outputformat=SHAPE-ZIP&VIEWPARAMS=asset_id:"+asset_id+"&format_options=filename:"+asset_name;
                         window.open(url, 'Download');
                     });
 
@@ -963,14 +963,14 @@
                         allowClear: true
                     }).on("change", function(e) {
                         // Removing the previous layers
-                        var layerToRemove = vmap.getLayersByName(current_occurence_label);
+                        var layerToRemove = vmap.getLayersByName(current_occurrence_label);
                         if (layerToRemove.length)
                         {
                             // By construction, there is only one WMS layer with this name
                             vmap.removeLayer(layerToRemove[0]);
                         }
 
-                        var layerToRemove2 = vmap.getLayersByName(baseline_occurence_label);
+                        var layerToRemove2 = vmap.getLayersByName(baseline_occurrence_label);
                         if (layerToRemove2.length)
                         {
                             // By construction, there is only one WMS layer with this name
@@ -995,11 +995,11 @@
                         if (e.added)
                         {
                             // Adding the new ones
-                            var co_wms = new OpenLayers.Layer.WMS(current_occurence_label,
+                            var co_wms = new OpenLayers.Layer.WMS(current_occurrence_label,
                                 geoserver_root+"/"+workspace_name+"/wms?",
                                 {
                                     "transparent":"true",
-                                    "layers":current_occurence_layername,
+                                    "layers":current_occurrence_layername,
                                     "format":"image/png8",
                                     "viewparams":"asset_id:"+e.added.id
                                 },{
@@ -1010,11 +1010,11 @@
                                 }
                             );
 
-                           var bo_wms = new OpenLayers.Layer.WMS(baseline_occurence_label,
+                           var bo_wms = new OpenLayers.Layer.WMS(baseline_occurrence_label,
                                 geoserver_root+"/"+workspace_name+"/wms?",
                                 {
                                     "transparent":"true",
-                                    "layers":baseline_occurence_layername,
+                                    "layers":baseline_occurrence_layername,
                                     "format":"image/png8",
                                     "viewparams":"asset_id:"+e.added.id
                                 },{
@@ -1080,7 +1080,7 @@
 
                             // Adding a legend image
                             $('.dataLayersDiv > br').each(function(idx,e){
-                                var layerNameArr = ["CURRENT_OCCURENCE","BASELINE_OCCURENCE"];
+                                var layerNameArr = [current_occurrence_layername,baseline_occurrence_layername];
                                 if ($("#e1")[0].value == "13")
                                 {
                                     layerNameArr=layerNameArr.concat([pd_current_layername,pd_future_layername]);
@@ -1134,7 +1134,7 @@
 
                     var processJson = function(data){
                         if (data.success){
-                            var layerToRefresh = vmap.getLayersByName(current_occurence_label);
+                            var layerToRefresh = vmap.getLayersByName(current_occurrence_label);
                             if (layerToRefresh.length)
                             {
                                 // By construction, there is only one WMS layer with this name
