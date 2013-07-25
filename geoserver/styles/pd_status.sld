@@ -18,10 +18,10 @@
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>          
           <PolygonSymbolizer>
-            <Fill>
+            <!-- Fill>
               <CssParameter name="fill">#58FA82</CssParameter>
               <CssParameter name="opacity">0.5</CssParameter>              
-            </Fill>
+            </Fill -->
           </PolygonSymbolizer>
         </Rule>
 
