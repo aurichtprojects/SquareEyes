@@ -10,7 +10,7 @@
       <FeatureTypeStyle>
 
         <Rule>
-          <Title>No reported occurence</Title>
+          <Title>No reported occurrence</Title>
           <ogc:Filter>
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>status</ogc:PropertyName>
