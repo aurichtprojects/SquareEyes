@@ -236,13 +236,17 @@
         div.olControlZoom a.olControlZoomToMaxExtent {
           width:  22px;
           height: 22px;
-          background: url("nz.png") no-repeat scroll 0 0 rgba(160, 160, 160, 0.25);
+          background-image: url("nz.png");
+          background-repeat: no-repeat;
+          background-color: rgba(160, 160, 160, 0.25);
         }
 
         div.olControlZoom a.olControlZoomToMaxExtent:hover {
           width:  22px;
           height: 22px;
-          background: url("nz.png") no-repeat scroll 0 0 rgba(160, 160, 160, 0.75);
+          background-image: url("nz.png");
+          background-repeat: no-repeat;
+          background-color: rgba(160, 160, 160, 0.75);
         }
 
         #helloP {
@@ -292,7 +296,6 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
   </head>
 
     <body>
@@ -490,6 +493,15 @@
         <script>
             var vmap, changeBasemapTo,activateControls, wfs_layer,assets_array,highlightCtrl,selectCtrl,toolPanel,unselectAllCtrl,unselectAllFeatures,historyClick,getSelectedCellsArray;
             var gridMaxRes = 400;
+            // Reduce the number of cells rendered in IE < 9
+            // Note: browser detection function is deprecated in jQuery 1.9+
+            if ($.browser.msie)
+            {
+                if (parseInt($.browser.version.split(".")[0]) < 9)
+                {
+                    gridMaxRes = 100;
+                }
+            }
             var geoserver_root = "/geoserver";
             var current_occurence_label = "Current occurence";
             var baseline_occurence_label = "Baseline occurence";
@@ -678,7 +690,7 @@
 
                     // Vector layer for the grid of cells
                     wfs_layer = new OpenLayers.Layer.Vector("Grid", {
-                        strategies: [new OpenLayers.Strategy.BBOX()],
+                        strategies: [new OpenLayers.Strategy.BBOX({ratio:1.1,resFactor:3})],
                         protocol: new OpenLayers.Protocol.WFS({
                             version: "1.1.0",
                             url: geoserver_root+"/wfs",
