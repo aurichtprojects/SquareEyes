@@ -420,7 +420,7 @@
                                         <input type="radio" name="field_options_radios" id="optionsRadios1" value="1">Reject
                                     </label>
                                     <label class="radio">
-                                        <input type="radio" name="field_options_radios" id="optionsRadios2" value="2">Report presence
+                                        <input type="radio" name="field_options_radios" id="optionsRadios2" value="2"><?php if ($logged_in_role == 'moderator') {echo "Presence";} else {echo "Report presence";} ?>
                                     </label>
                                     <label class="radio <?php if ($logged_in_role == 'user') {echo "hide";} ?>">
                                         <input type="radio" name="field_options_radios" id="optionsRadios3" value="3">Approve
