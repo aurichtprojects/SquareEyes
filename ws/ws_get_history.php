@@ -29,13 +29,15 @@ try {
 	$p_cells_list = $p_cells_id;
 
 	$sql = <<<ENDSQL
-select cell_id,source_type,status,stakeholder,time_mark from
+select cell_id,source_type,status,stakeholder,time_mark,comments,photo from
 ((select 
 oc.cell_id,
 cast('Observation' as text) as source_type,
 (select rs.label from nz.r_status rs where rs.id=o.status_id) as status,
 cast('User contribution' as text)||' (by '||(select name from nz."user" u where o.user_id=u.id)||')' as stakeholder,
 to_char(o.ts, 'YYYY/MM/DD HH12:MI:SS') as time_mark,
+coalesce(o.comments,'') as comments,
+coalesce(o.photo,'') as photo,
 cast(extract(epoch from o.ts) as integer) as ord
 from nz.observation o,nz.observation_coverage oc
 where o.id=oc.observation_id and o.asset_id=$p_asset_id and oc.cell_id in ($p_cells_list))
@@ -47,6 +49,8 @@ bo.cell_id,
 (select rs.label from nz.r_status rs where rs.id=bo.status_id),
 (select rs.label from nz.r_source rs where rs.id=bo.source_id),
 (select ry.label from nz.r_year ry   where ry.id=bo.year_id),
+'',
+'',
 0
 from nz.baseline_occurence bo where bo.cell_id in ($p_cells_list) and bo.asset_id=$p_asset_id)) t
 order by cell_id,ord desc
