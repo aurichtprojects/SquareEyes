@@ -290,6 +290,23 @@
         .dropdown-menu > li > a {
             padding:3px 10px;
         }
+
+        .olControlAttribution {
+            font-size:10px;
+            bottom:0px;
+            right:0px;
+            -moz-user-select: none;
+            background: -moz-linear-gradient(left center , rgba(255, 255, 255, 0) 0px, rgba(255, 255, 255, 0.5) 50px) repeat scroll 0 0 transparent;
+            color: #444444;
+            direction: ltr;
+            font-family: Arial,sans-serif;
+            height: 19px;
+            line-height: 19px;
+            padding-left: 50px;
+            padding-right: 2px;
+            text-align: right;
+            white-space: nowrap;
+        }
     </style>
     <!--<link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">-->
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -584,6 +601,7 @@
                                 new OpenLayers.Control.Navigation(),
                                 new OpenLayers.Control.Zoom(),
                                 new OpenLayers.Control.ScaleLine(),
+                                new OpenLayers.Control.Attribution(),
                                 new OpenLayers.Control.ZoomBox({'keyMask': OpenLayers.Handler.MOD_SHIFT})
                             ],
                             numZoomLevels:20,
@@ -648,7 +666,11 @@
                         "http://otile2.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg",
                         "http://otile3.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg",
                         "http://otile4.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg"],
-                        {displayInLayerSwitcher:false}
+                        {
+                            attribution: "Data, imagery and map information provided by <a href='http://www.mapquest.com/'  target='_blank'>MapQuest</a>, <a href='http://www.openstreetmap.org/' target='_blank'>Open Street Map</a> and contributors, <a href='http://creativecommons.org/licenses/by-sa/2.0/' target='_blank'>CC-BY-SA</a>  <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
+                            transitionEffect: "resize",
+                            displayInLayerSwitcher:false
+                        }
                     );
                     vmap.addLayer(mq);
 
