@@ -106,7 +106,7 @@ try {
 				// Image web path:
 				$uploaded_img_webpath = "http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/".$target_path;
 				// Inserting the observation
-				$sql = "UPDATE observation SET photo='".$uploaded_img_webpath."' WHERE id=".$obs_id;
+				$sql = "UPDATE nz.observation SET photo='".$uploaded_img_webpath."' WHERE id=".$obs_id;
 				$sql = sanitizeSQL($sql);
 				//echo $sql;
 			    $recordSet = $pgconn->prepare($sql);
