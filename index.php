@@ -409,7 +409,7 @@
                                         <input type="radio" name="field_options_radios" id="optionsRadios3" value="3">Approve
                                     </label>
                                     <!-- START COMMENT UPLOAD-->
-                                    <textarea rows="2" name="field_comment" placeholder="Your comments"></textarea>
+                                    <textarea rows="2" name="field_comment" id="field_comment" placeholder="Your comments"></textarea>
                                     <div class="fileupload fileupload-new" data-provides="fileupload">
                                         <div class="fileupload-new thumbnail" style="width: 100px; height: 100px;">
                                             <img src="http://www.placehold.it/100x100/EFEFEF/AAAAAA&text=no+image" />
@@ -932,8 +932,8 @@
                         .done(function(data) {
                                 // An array of flat objects, ready to be plugged into an HTML table
                                 var json_res = data.rows;
-
-                                var html_str = "<table class='table table-hover table-striped table-bordered table-condensed'><thead><tr><th>Cell</th><th>Source type</th><th>Status</th><th>Stakeholder</th><th>Time</th></tr></thead>";
+                                var photo_str;
+                                var html_str = "<table class='table table-hover table-striped table-bordered table-condensed'><thead><tr><th>Cell</th><th>Source type</th><th>Status</th><th>Stakeholder</th><th>Time</th><th>Comments</th><th>Photo</th></tr></thead>";
                                 html_str += "<tbody>";
                                 for (r in json_res)
                                 {
@@ -943,6 +943,16 @@
                                     html_str += "<td>"+json_res[r].status+"</td>";
                                     html_str += "<td>"+json_res[r].stakeholder+"</td>";
                                     html_str += "<td>"+json_res[r].time_mark+"</td>";
+                                    html_str += "<td>"+json_res[r].comments+"</td>";
+                                    if (json_res[r].photo)
+                                    {
+                                        photo_str = "<a href='"+json_res[r].photo+"' target='_blank'><img src='"+json_res[r].photo+"' style='height:30px;width:30px;'></a>";
+                                    }
+                                    else
+                                    {
+                                        photo_str = '';
+                                    }
+                                    html_str += "<td>"+photo_str+"</td>";
                                     html_str += "</tr>";
                                 }
                                 html_str += "</tbody></table>";
@@ -1143,6 +1153,8 @@
                     // Currently selected cells
                     var cell_arr = getSelectedCellsArray();
                     $('form input[name="field_selected_cells"]').val(cell_arr);
+                    // Escaping comment string for line returns
+                    $('form textarea[name="field_comment"]').val($('form textarea[name="field_comment"]').val().replace(/\n/g, '\\n'));
 
                     var processJson = function(data){
                         if (data.success){
