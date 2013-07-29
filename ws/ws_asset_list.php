@@ -15,7 +15,7 @@ $err_email = "herve.senot@groundtruth.com.au";
 # Performs the query and returns XML or JSON
 try {
 	$format = 'json';
-	$sql = sanitizeSQL("SELECT id,label as text FROM nz.asset ORDER BY label");
+	$sql = sanitizeSQL("SELECT a.id as id,a.label as text,(select case(select count(*) from nz.potential_distribution_current pdc where pdc.asset_id=a.id) when 0 then false else true end) as pd_flag FROM nz.asset a ORDER BY label");
 	$pgconn = pgConnection();
 
     /*** fetch into an PDOStatement object ***/

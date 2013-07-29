@@ -1030,7 +1030,7 @@
                             vmap.addLayers([co_wms,bo_wms]);
 
                             // Adding potential distribution layers if the asset_id is 
-                            if (e.added.id == 13)
+                            if (e.added.pd_flag == "t")
                             {
                                 // Adding the new ones
                                 var pdc_wms = new OpenLayers.Layer.WMS(pd_current_label,
@@ -1081,7 +1081,8 @@
                             // Adding a legend image
                             $('.dataLayersDiv > br').each(function(idx,e){
                                 var layerNameArr = [current_occurrence_layername,baseline_occurrence_layername];
-                                if ($("#e1")[0].value == "13")
+                                // Array index starts at 0 whereas asset_id starts at 1 - the first asset is at position 0 in the array
+                                if (assets_array[$("#e1")[0].value-1].pd_flag == "t")
                                 {
                                     layerNameArr=layerNameArr.concat([pd_current_layername,pd_future_layername]);
                                 }
