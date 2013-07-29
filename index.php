@@ -449,6 +449,8 @@
                         <ul class="dropdown-menu" style="left:auto; right:0; min-width: 60px; font-size:10px;">
                             <li><a href="#" onClick="changeBasemapTo('OSM')">OpenStreetMap</a></li>
                             <li class="divider"></li>
+                            <li><a href="#" onClick="changeBasemapTo('MapQuest')">MapQuest</a></li>
+                            <li class="divider"></li>
                             <li><a href="#" onClick="changeBasemapTo('Google Satellite')">Google Aerial</a></li>
                             <li class="divider"></li>
                             <li><a href="#" onClick="changeBasemapTo('Google Physical')">Google Terrain</a></li>
@@ -640,6 +642,15 @@
 
                     var osm = new OpenLayers.Layer.OSM("OSM","",{displayInLayerSwitcher:false});
                     vmap.addLayer(osm);
+
+                    var mq = new OpenLayers.Layer.OSM("MapQuest",
+                        ["http://otile1.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg",
+                        "http://otile2.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg",
+                        "http://otile3.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg",
+                        "http://otile4.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg"],
+                        {displayInLayerSwitcher:false}
+                    );
+                    vmap.addLayer(mq);
 
                     var clearBaseLayer = new OpenLayers.Layer("None", {isBaseLayer: true, displayInLayerSwitcher:false}); 
                     vmap.addLayer(clearBaseLayer);
