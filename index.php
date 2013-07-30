@@ -1176,7 +1176,7 @@
                     var cell_arr = getSelectedCellsArray();
                     $('form input[name="field_selected_cells"]').val(cell_arr);
                     // Escaping comment string for line returns
-                    $('form textarea[name="field_comment"]').val($('form textarea[name="field_comment"]').val().replace(/\n/g, '\\n'));
+                    $('form textarea[name="field_comment"]').val($('form textarea[name="field_comment"]').val().replace(/\n/g, '\\\\n'));
 
                     var processJson = function(data){
                         if (data.success){
