@@ -16,10 +16,17 @@
             {
                 // Establishing connection to database to check that the username and password submitted are valid
                 $pgconn = pgConnection();
-                $sql = "select (select lower(r.label) from nz.r_role r where r.id=role_id) from nz.\"user\" where name='".$_POST['login_username']."' and md5(password)='".$_POST['login_password']."'";
-                //echo $sql;
+
+                // Prepared statement
+                $sql = "select (select lower(r.label) from nz.r_role r where r.id=role_id) from nz.\"user\" where name= :name and md5(password)= :password";
+
+                // Parameters
+                $login_username = $_POST['login_username'];
+                $login_password = $_POST['login_password'];
+
+                // Prepare and execute query
                 $recordSet = $pgconn->prepare($sql);
-                $recordSet->execute();
+                $recordSet->execute(array('name' => $login_username, 'password' => $login_password));
 
                 $_SESSION['logged-in'] = false;
                 $_SESSION['logged-in-user'] = '';
